@@ -41,3 +41,12 @@ a,
     font-size: 16px;
   }
 }
+
+/* ตัวหนังสือในช่องกรอกข้อมูลให้เป็นสีดำเข้มเสมอ (กันมืดตัวเมื่อเปิด dark mode) */
+input,
+select,
+textarea {
+  color: #0f172a;
+  caret-color: #0f172a;
+  background-color: #ffffff;
+}
