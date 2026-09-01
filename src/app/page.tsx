@@ -10,45 +10,29 @@ import { getSchoolName } from "@/lib/school";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [teacherCount] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(teachersTable);
-  const [pendingLeaveCount] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(leaveRequests)
-    .where(eq(leaveRequests.status, "pending"));
-  const [assignedCount] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(subAssignments)
-    .where(eq(subAssignments.status, "assigned"));
-  const [unassignedCount] = await db
-    .select({ count: sql<number>`count(*)` })
-    .from(subAssignments)
-    .where(eq(subAssignments.status, "pending"));
+  let teacherCount: { count: number } | undefined;
+  let pendingLeaveCount: { count: number } | undefined;
+  let assignedCount: { count: number } | undefined;
+  let unassignedCount: { count: number } | undefined;
+  let pendingLeaves: any[] = [];
+  let recentAssignments: any[] = [];
+  try {
+    [teacherCount] = await db.select({ count: sql<number>`count(*)` }).from(teachersTable);
+    [pendingLeaveCount] = await db.select({ count: sql<number>`count(*)` }).from(leaveRequests).where(eq(leaveRequests.status, "pending"));
+    [assignedCount] = await db.select({ count: sql<number>`count(*)` }).from(subAssignments).where(eq(subAssignments.status, "assigned"));
+    [unassignedCount] = await db.select({ count: sql<number>`count(*)` }).from(subAssignments).where(eq(subAssignments.status, "pending"));
+    pendingLeaves = await db.select({ leave: leaveRequests, teacher: teachersTable }).from(leaveRequests).innerJoin(teachersTable, eq(teachersTable.id, leaveRequests.teacherId)).where(eq(leaveRequests.status, "pending")).orderBy(desc(leaveRequests.startDate)).limit(5);
+    const absentAlias = alias(teachersTable, "absent");
+    const substituteAlias = alias(teachersTable, "substitute");
+    recentAssignments = await db.select({ a: subAssignments, absent: absentAlias, substitute: substituteAlias }).from(subAssignments).innerJoin(absentAlias, eq(absentAlias.id, subAssignments.absentTeacherId)).leftJoin(substituteAlias, eq(substituteAlias.id, subAssignments.substituteTeacherId)).orderBy(desc(subAssignments.date)).limit(5);
+  } catch (e) {
+    console.error("DB not ready on Vercel yet:", e);
+  }
 
-  const pendingLeaves = await db
-    .select({ leave: leaveRequests, teacher: teachersTable })
-    .from(leaveRequests)
-    .innerJoin(teachersTable, eq(teachersTable.id, leaveRequests.teacherId))
-    .where(eq(leaveRequests.status, "pending"))
-    .orderBy(desc(leaveRequests.startDate))
-    .limit(5);
-
-  const absentAlias = alias(teachersTable, "absent");
-  const substituteAlias = alias(teachersTable, "substitute");
-  const recentAssignments = await db
-    .select({
-      a: subAssignments,
-      absent: absentAlias,
-      substitute: substituteAlias,
-    })
-    .from(subAssignments)
-    .innerJoin(absentAlias, eq(absentAlias.id, subAssignments.absentTeacherId))
-    .leftJoin(substituteAlias, eq(substituteAlias.id, subAssignments.substituteTeacherId))
-    .orderBy(desc(subAssignments.date))
-    .limit(5);
-
-  // ภาระงานสัปดาห์นี้ (จันทร์-ศุกร์ของวันนี้)
+  let weeklyRows: any[] = [];
+  let teacherMap = new Map();
+  let workload: any[] = [];
+  let schoolName = "โรงเรียนประถม";
   const today = new Date();
   const dow = today.getDay(); // 0=อา
   const mon = new Date(today);
@@ -58,15 +42,18 @@ export default async function Home() {
   const monStr = mon.toISOString().slice(0, 10);
   const friStr = fri.toISOString().slice(0, 10);
 
-  const weeklyRows = await db
-    .select({ sid: subAssignments.substituteTeacherId, cnt: sql<number>`count(*)` })
-    .from(subAssignments)
-    .where(sql`${subAssignments.date} >= ${monStr} AND ${subAssignments.date} <= ${friStr} AND ${subAssignments.substituteTeacherId} IS NOT NULL`)
-    .groupBy(subAssignments.substituteTeacherId);
-
-  const schoolName = await getSchoolName();
-  const teacherMap = new Map((await db.select().from(teachersTable)).map((t) => [t.id, t]));
-  const workload = weeklyRows
+  try {
+    weeklyRows = await db
+      .select({ sid: subAssignments.substituteTeacherId, cnt: sql<number>`count(*)` })
+      .from(subAssignments)
+      .where(sql`${subAssignments.date} >= ${monStr} AND ${subAssignments.date} <= ${friStr} AND ${subAssignments.substituteTeacherId} IS NOT NULL`)
+      .groupBy(subAssignments.substituteTeacherId);
+    teacherMap = new Map((await db.select().from(teachersTable)).map((t) => [t.id, t]));
+    schoolName = await getSchoolName();
+  } catch (e) {
+    console.error("DB not ready on Vercel yet:", e);
+  }
+  workload = weeklyRows
     .map((r) => ({ teacher: teacherMap.get(r.sid as number), count: r.cnt }))
     .filter((x) => x.teacher)
     .sort((a, b) => b.count - a.count)
@@ -78,6 +65,13 @@ export default async function Home() {
     { label: "คาบที่จัดแทนแล้ว", value: assignedCount?.count ?? 0, href: "/assignments", bg: "bg-emerald-300", border: "border-emerald-400", text: "text-emerald-950", icon: "✨", sub: "เสร็จแล้ว" },
     { label: "คาบที่ยังไม่จัด", value: unassignedCount?.count ?? 0, href: "/assignments?status=pending", bg: "bg-pink-300", border: "border-pink-400", text: "text-pink-950", icon: "🎈", sub: "รอจัด" },
   ];
+
+  const dbNotReady = !teacherCount && pendingLeaves.length === 0 && recentAssignments.length === 0;
+  const _banner = dbNotReady && (
+    <div className="mb-8 border border-amber-300 bg-amber-50 text-amber-900 rounded-xl px-5 py-4 text-sm">
+      ยังไม่ได้เชื่อมฐานข้อมูลบนเว็บ (Vercel) — กรุณาไปที่ <span className="font-semibold">Storage → Create Database → Postgres</span> แล้วกด <span className="font-semibold">Redeploy</span> เพื่อให้ข้อมูลครูแสดงผล
+    </div>
+  );
 
   // modern — Linear-style minimal, trust-first
   return (
@@ -92,6 +86,8 @@ export default async function Home() {
           {monStr} → {friStr} · 27 ครู
         </div>
       </div>
+
+      {_banner}
 
       {pendingLeaves.length > 0 && (
         <div className="border border-zinc-200 bg-white rounded-xl px-5 py-4 mb-8 flex flex-wrap items-center justify-between gap-3">
