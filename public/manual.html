@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0f172a" />
+<title>คู่มือการใช้งาน · ระบบจัดสอนแทนอัตโนมัติ</title>
+<style>
+  :root {
+    --ink: #111827;
+    --muted: #4b5563;
+    --line: #e5e7eb;
+    --card: #ffffff;
+    --bg: #f7f7f8;
+    --brand: #2563eb;
+    --brand-dark: #1e40af;
+    --ok: #059669;
+    --warn: #d97706;
+    --dark: #0f172a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: Arial, "Segoe UI", "Noto Sans Thai", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 64px; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #2563eb 130%);
+    color: #f8fafc;
+    padding: 56px 20px 44px;
+    text-align: center;
+  }
+  .hero .title {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  .hero .sub { font-size: clamp(14px, 2.4vw, 17px); color: #cbd5e1; margin: 0 auto; max-width: 560px; }
+  .hero .badge {
+    display: inline-block;
+    margin-bottom: 18px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #93c5fd;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* Nav */
+  nav.toc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: -28px 0 40px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(15,23,42,0.06);
+  }
+  nav.toc .lbl { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin: 0 0 10px; }
+  nav.toc ol { margin: 0; padding-left: 20px; }
+  nav.toc li { font-size: 14px; margin: 4px 0; }
+  nav.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted #d1d5db; }
+  nav.toc a:hover { color: var(--brand); border-color: var(--brand); }
+
+  /* Cards/sections */
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 26px 26px 30px;
+    margin: 28px 0;
+    box-shadow: 0 4px 18px rgba(15,23,42,0.04);
+  }
+  .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; height: 30px;
+    border-radius: 10px;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    margin-right: 10px;
+  }
+  section .head { margin: 0 0 14px; }
+  section .head h2 { display: flex; align-items: center; margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+  section .head p { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
+
+  h3 { font-size: 17px; margin: 24px 0 8px; color: var(--dark); }
+  p { margin: 10px 0; font-size: 15px; }
+  ul, ol { margin: 8px 0; padding-left: 24px; }
+  li { margin: 6px 0; font-size: 15px; }
+  strong { color: var(--dark); }
+  code {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 13px;
+    font-family: Consolas, "Courier New", monospace;
+  }
+
+  /* Feature grid */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 16px 0; }
+  @media (min-width: 620px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .feat {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: #fbfbfc;
+  }
+  .feat b { display: block; font-size: 15px; margin-bottom: 4px; color: var(--dark); }
+  .feat span { font-size: 13.5px; color: var(--muted); line-height: 1.6; display: block; }
+
+  /* Steps */
+  .steps { counter-reset: step; list-style: none; padding-left: 0; }
+  .steps li { counter-increment: step; position: relative; padding-left: 44px; }
+  .steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 2px;
+    width: 30px; height: 30px;
+    border-radius: 999px;
+    background: var(--dark); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+  }
+
+  /* Callouts */
+  .tip, .warn, .note {
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  .tip { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+  .warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .note { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; }
+  .tip b, .warn b, .note b { color: inherit; }
+
+  .badge {
+    display: inline-block; border-radius: 999px; padding: 2px 10px;
+    font-size: 12px; font-weight: 700;
+  }
+  .b-blue { background: #dbeafe; color: #1d4ed8; }
+  .b-green { background: #d1fae5; color: #047857; }
+  .b-amber { background: #fef3c7; color: #b45309; }
+  .b-red { background: #fee2e2; color: #b91c1c; }
+  .b-slate { background: #e2e8f0; color: #334155; }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 12px; border: 1px solid var(--line); vertical-align: top; }
+  th { background: #f1f5f9; font-weight: 700; }
+
+  .foot {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+  }
+
+  @media (max-width: 620px) {
+    section.card { padding: 20px 18px 24px; }
+    nav.toc { padding: 16px; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .hero { padding: 30px 20px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    nav.toc, .foot, .no-print { display: none; }
+    section.card { break-inside: avoid; box-shadow: none; margin: 16px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="badge">คู่มือสำหรับฝ่ายวิชาการ</span>
+  <h1 class="title">ระบบจัดสอนแทนอัตโนมัติ</h1>
+  <p class="sub">วิธีใช้งานและคุณสมบัติของโปรแกรม เข้าใจง่าย ครบทุกหน้า ติดตั้งเป็นแอปบนมือถือแล้วใช้งานได้ทุกวัน</p>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    <p class="lbl">สารบัญ</p>
+    <ol>
+      <li><a href="#start">เริ่มต้นใช้งานใน 1 นาที</a></li>
+      <li><a href="#dashboard">แดชบอร์ด — ภาพรวมประจำวัน</a></li>
+      <li><a href="#teachers">จัดการครู</a></li>
+      <li><a href="#schedule">ตารางสอน</a></li>
+      <li><a href="#leaves">การลา / ราชการ</a></li>
+      <li><a href="#assignments">รายการจัดสอนแทน</a></li>
+      <li><a href="#calendar">ปฏิทิน</a></li>
+      <li><a href="#settings">ตั้งค่าโรงเรียน</a></li>
+      <li><a href="#app">ติดตั้งเป็นแอปบนมือถือ</a></li>
+      <li><a href="#tips">ความรู้ที่ควรรู้</a></li>
+    </ol>
+  </nav>
+
+  <!-- เริ่มต้น -->
+  <section class="card" id="start">
+    <div class="head"><h2><span class="num">1</span>เริ่มต้นใช้งานใน 1 นาที</h2>
+      <p>เปิดลิงก์จากมือถือหรือคอมพิวเตอร์ แล้วเข้าตามเมนูแถบข้าง (หรือกดแฮมเบอร์เกอร์บนมือถือ)</p></div>
+    <ol class="steps">
+      <li>เปิดเว็บไซต์ของโรงเรียน — เห็น <strong>แดชบอร์ด</strong> เป็นหน้าแรกทันที</li>
+      <li>ใส่ข้อมูลครูในเมนู <strong>จัดการครู</strong> (หรือนำเข้าตารางสอนเป็นไฟล์ CSV จากเมนู ตารางสอน → นำเข้าจำนวนมาก)</li>
+      <li>เมื่อมีครูลา ให้ไปที่ <strong>การลา/ราชการ</strong> กด <strong>บันทึกการลา</strong> ระบบจะแนะนำคาบที่ขาดและครูว่างให้จัดแทน</li>
+    </ol>
+    <div class="tip"><b>ใช้บ่อยบนมือถือ?</b> คำแนะนำในหัวข้อ <a href="#app">ติดตั้งเป็นแอปบนมือถือ</a> จะทำให้เปิดใช้ได้เหมือนแอปจริง ๆ</div>
+  </section>
+
+  <!-- แดชบอร์ด -->
+  <section class="card" id="dashboard">
+    <div class="head"><h2><span class="num">2</span>แดชบอร์ด — ภาพรวมประจำวัน</h2>
+      <p>หน้าแรกที่รวมทุกอย่างไว้ครบ ดูจบได้ในหน้าเดียวทุกเช้า</p></div>
+    <ul>
+      <li><strong>สถิติหลัก</strong> — จำนวนครูทั้งหมด จำนวนการลาที่รออนุมัติ จำนวนคาบที่จัดแทนแล้ว และคาบที่ยังไม่จัด</li>
+      <li><strong>ภาระสอนแทนสัปดาห์นี้</strong> — ใครรับแทนมากที่สุด (จันทร์ ถึง ศุกร์)</li>
+      <li><strong>การลาที่ต้องจัดการ</strong> — การลาล่าสุดที่ยังต้องจัดแทน กดเข้าไปจัดได้ทันที</li>
+      <li><strong>รายการจัดสอนแทนล่าสุด</strong> — เห็นกิจกรรมจัดแทนที่เพิ่งบันทึก</li>
+    </ul>
+    <p>การ์ดแต่ละใบกดเข้าไปแล้วไปยังหน้ารายละเอียดนั้น ๆ โดยตรง</p>
+  </section>
+
+  <!-- จัดการครู -->
+  <section class="card" id="teachers">
+    <div class="head"><h2><span class="num">3</span>จัดการครู</h2>
+      <p>เพิ่ม / ค้นหา / แก้ไข / ลบข้อมูลครู และดูตารางสอนรายบุคคล</p></div>
+    <div class="grid">
+      <div class="feat"><b>เพิ่มครู</b><span>กดปุ่ม "เพิ่มครู" กรอกคำนำหน้า ชื่อ นามสกุล วิชาที่สอนได้ เบอร์โทร อีเมล และคาบสูงสุด/วัน ระบบจะบันทึกให้ทันที</span></div>
+      <div class="feat"><b>ค้นหา</b><span>พิมพ์ชื่อหรือวิชาลงในช่องค้นหา เพื่อหาครูได้เร็ว เหมาะกับโรงเรียนที่มีครูจำนวนมาก</span></div>
+      <div class="feat"><b>ตารางสรุปคาบสอนต่อคน</b><span>แต่ละคนนับยอดคาบทั้งหมด และรายการวิชาที่สอน โดยแสดงเป็นชิปวิชา</span></div>
+      <div class="feat"><b>จัดการรายคน</b><span>กด "ตาราง" เพื่อแก้ตารางประจำสัปดาห์ทีละช่อง กด "แก้ไข" เพื่อแก้ข้อมูลส่วนตัว กด "ลบ" เพื่อลบครูออกจากระบบ</span></div>
+    </div>
+    <p>ตารางสอนของแต่ละคนไว้สำหรับคำนวณ <strong>ครูว่าง</strong> — ข้อมูลสำคัญที่สุดที่ทำให้ระบบจัดแทนได้ตรงคาบ</p>
+    <div class="note"><b>หมายเหตุ:</b> เมื่อลบครู ระบบจะลบตารางสอนของครูคนนั้นไปด้วย และไม่สามารถจัดครูคนนี้แทนได้อีกต่อไป</div>
+  </section>
+
+  <!-- ตารางสอน -->
+  <section class="card" id="schedule">
+    <div class="head"><h2><span class="num">4</span>ตารางสอน</h2>
+      <p>ดูตารางรวมทุกคาบทั้งสัปดาห์ และนำเข้าตารางทั้งโรงจากไฟล์ CSV</p></div>
+    <ul>
+      <li><strong>ตารางรวม (ทุกคน × ทุกคาบ)</strong> — เข้าดูได้จากเมนู "ตารางสอน" เห็นช่องว่าง = คนว่าง ห้อง/ชั้น วิชา ที่หน้าตาแบบตารางหมากฮอส</li>
+      <li><strong>แก้รายบุคคล</strong> — จากหน้าจัดการครู กด "ตาราง" ของครูคนนั้น เห็นช่อง คาบ/วัน แล้วพิมพ์วิชา ห้อง ชั้น ลงในแต่ละช่องได้เลย</li>
+      <li><strong>นำเข้าจำนวนมาก (30–100 คน)</strong> — ใช้ไฟล์ CSV เดียวจบจากเมนู "ตารางสอน → นำเข้าตารางสอนจำนวนมาก":
+        <ol>
+          <li>ดาวน์โหลดไฟล์ตัวอย่าง <code>template-schedule.csv</code></li>
+          <li>กรอกคอลัมน์ <code>ชื่อ,นามสกุล,คำนำหน้า,วัน(MON-FRI),คาบ(1-8),วิชา,ห้อง,ชั้น,กลุ่มวิชา</code></li>
+          <li>วันใช้ <code>MON TUE WED THU FRI</code> เท่านั้น คาบ 1-8 ตรงกับเวลาจริง (รายละเอียดในหน้าแนะนำ)</li>
+          <li>ส่งไฟล์ให้แอดมินรันสคริปต์นำเข้า — ระบบสร้างครูใหม่ให้เองและแทนที่ตารางเก่า</li>
+        </ol>
+      </li>
+    </ul>
+    <div class="warn"><b>คาบและเวลา:</b> 08.45→คาบ 1, 09.45→คาบ 2, 10.45→คาบ 3, 13.00→คาบ 4, 14.00→คาบ 5 (คาบ 6-8 สำหรับช่วงบ่าย/กิจกรรม ถ้าจัดตารางถึง)</div>
+  </section>
+
+  <!-- การลา -->
+  <section class="card" id="leaves">
+    <div class="head"><h2><span class="num">5</span>การลา / ราชการ</h2>
+      <p>หัวใจของระบบ — เมื่อไหร่ที่ครูไม่มาสอน เริ่มจากตรงนี้ทุกครั้ง</p></div>
+    <p><strong>วิธีบันทึกการลา:</strong></p>
+    <ol class="steps">
+      <li>ไปเมนู <strong>การลา/ราชการ</strong> แล้วกด <strong>"บันทึกการลา"</strong></li>
+      <li>เลือก <strong>ครู</strong> ช่วงวันที่ (วันเริ่ม – วันสิ้นสุด) และ <strong>ประเภท</strong>: ลาเรียน / ลาป่วย / ลากิจ / ไปราชการ / อื่น ๆ</li>
+      <li>กรอกเหตุผล (ถ้ามี) แล้วกดบันทึก</li>
+    </ol>
+    <p>รายการใหม่จะปรากฏในสถานะ <span class="badge b-amber">รออนุมัติ</span> ระบบจะคำนวณคาบที่ขาดทั้งช่วงให้นับจำนวนด้วยตัวเอง</p>
+    <p><strong>จัดการแต่ละรายการ</strong> — กดเข้ารายการจะเห็น:</p>
+    <ul>
+      <li>ข้อมูลการลา: ครูที่ลา ช่วงวัน ประเภท เหตุผล และปุ่ม <strong>อนุมัติ / ไม่อนุมัติ</strong></li>
+      <li>ส่วน <strong>การจัดสอนแทน</strong>: ระบบแจ้งจำนวนคาบที่ขาด และแนะนำครูที่ว่างในแต่ละคาบ — เลือกครูจากรายการแล้วบันทึกได้ทันที หรือเปลี่ยนครูแทนเป็นคนอื่นตามต้องการ</li>
+    </ul>
+    <div class="tip"><b>จัดแทนอัตโนมัติ:</b> ระบบเลือกครูว่างให้อัตโนมัติ แต่คุณแก้ไขเป็นครูคนไหนก็ได้ก่อนบันทึก</div>
+  </section>
+
+  <!-- รายการจัดแทน -->
+  <section class="card" id="assignments">
+    <div class="head"><h2><span class="num">6</span>รายการจัดสอนแทน</h2>
+      <p>รวมคาบที่จัดแทนไว้ทั้งหมด พร้อมกรอง พิมพ์ และส่งออกไฟล์</p></div>
+    <div class="grid">
+      <div class="feat"><b>สถานะของแต่ละคาบ</b><span><span class="badge b-amber">รอจัด</span> ยังไม่ได้เลือกครู <span class="badge b-blue">จัดแล้ว</span> ระบุครูแล้ว <span class="badge b-green">เสร็จสิ้น</span> เรียนแทนครบแล้ว</span></div>
+      <div class="feat"><b>ปุ่มจัดการ</b><span>กด "เสร็จสิ้น" เมื่อครูแทนสอนครบคาบ ยกเลิกได้ถ้าเผลอกด และปุ่ม "ลบ" เพื่อลบรายการ</span></div>
+      <div class="feat"><b>กรองรายการ</b><span>กรองตามสถานะ / วันที่ / ครู (ทั้งครูที่ลาและครูแทน) หารายการได้ไว</span></div>
+      <div class="feat"><b>พิมพ์และส่งออก</b><span>ปุ่ม "พิมพ์หน้าเสาธง" สำหรับพิมพ์ประกาศให้นักเรียน และปุ่มส่งออก <strong>CSV</strong> เพื่อเปิดใน Excel</span></div>
+    </div>
+    <p>การเปลี่ยนแปลงสถานะสะท้อนไปยังแดชบอร์ดและปฏิทินให้อัตโนมัติ</p>
+  </section>
+
+  <!-- ปฏิทิน -->
+  <section class="card" id="calendar">
+    <div class="head"><h2><span class="num">7</span>ปฏิทิน</h2>
+      <p>ดูทั้งสัปดาห์ในมุมมองเดียว ใครลา ใครแทน วันที่ไหน</p></div>
+    <ul>
+      <li>เลือกสัปดาห์ด้วยปุ่ม <strong>ก่อนหน้า / ถัดไป</strong> หรือกด <strong>วันนี้</strong> เพื่อกลับมา</li>
+      <li>แต่ละวันแสดง <strong>รายการลา/ราชการ</strong> และ <strong>คาบที่จัดแทน</strong> แยกหมวดกันชัดเจน</li>
+      <li>วันที่เป็นวันนี้ไฮไลต์สีน้ำเงินให้เห็นง่าย</li>
+    </ul>
+  </section>
+
+  <!-- ตั้งค่า -->
+  <section class="card" id="settings">
+    <div class="head"><h2><span class="num">8</span>ตั้งค่าโรงเรียน</h2>
+      <p>ปรับชื่อโรงเรียนเดียวจบทั้งระบบ</p></div>
+    <p>เมนู <strong>ตั้งค่าชื่อโรงเรียน</strong> → พิมพ์ชื่อ เช่น "โรงเรียนอนุบาลหนองควาย" → บันทึก</p>
+    <p>ชื่อนี้เปลี่ยนไปสว่างหมดทุกที่พร้อมกัน ทั้งแดชบอร์ด ปฏิทิน และแถบเมนู ไม่ต้องแก้ทีละหน้า</p>
+  </section>
+
+  <!-- ติดตั้งเป็นแอป -->
+  <section class="card" id="app">
+    <div class="head"><h2><span class="num">9</span>ติดตั้งเป็นแอปบนมือถือ</h2>
+      <p>ระบบรองรับการติดตั้งเป็นแอป (PWA) เปิดใช้งาน offline ได้บางส่วน เหมือนแอปจริง</p></div>
+    <ol class="steps">
+      <li>เปิดเว็บไซต์ใน Chrome / Safari บนมือถือ</li>
+      <li>iPhone: กดปุ่ม แชร์ แล้วเลือก <strong>"เพิ่มที่หน้าจอหลัก"</strong><br>Android: กดเมนู ⋮ แล้วเลือก <strong>"ติดตั้งแอป"</strong> หรือ "เพิ่มไปยังหน้าจอหลัก"</li>
+      <li>เข้าใช้งานจากไอคอนบนหน้าจอเหมือนแอปปกติ ไม่ต้องพิมพ์ลิงก์อีก</li>
+    </ol>
+    <div class="note"><b>คอมพิวเตอร์:</b> Chrome → ไอคอนติดตั้งที่ท้ายแถบที่อยู่ (ถ้าเห็น) หรือเมนู ⋮ → ติดตั้ง</div>
+  </section>
+
+  <!-- ความรู้ที่ควรรู้ -->
+  <section class="card" id="tips">
+    <div class="head"><h2><span class="num">10</span>ความรู้ที่ควรรู้</h2>
+      <p>ตัวช่วยเล็ก ๆ ที่ทำให้ใช้คล่องขึ้น</p></div>
+    <ul>
+      <li><strong>มือถือ vs คอม:</strong> เว็บปรับอัตโนมัติ — มือถือแสดงเป็นการ์ดกดง่าย จอใหญ่แสดงเป็นตารางละเอียด</li>
+      <li><strong>ข้อมูลเป็นจริงเสมอ:</strong> ทุกหน้าอ่านจากฐานข้อมูลเดียวกัน เปลี่ยนที่ไหนเห็นผลทันทีทุกหน้า</li>
+      <li><strong>ระวังการลบครู:</strong> ถ้าลบครูที่เคยถูกจัดแทนไปแล้ว รายการเก่าอาจขาดชื่อครูแทน ควรตรวจสอบก่อนลบ</li>
+      <li><strong>สำรองข้อมูล:</strong> ระบบฝากข้อมูลไว้บนคลาวด์ ใช้ร่วมกันหลายเครื่องได้</li>
+    </ul>
+    <table>
+      <tr><th>ประเภทการลา</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      <tr><td><span class="badge b-blue">ลาเรียน</span></td><td>ลาประเภทการศึกษา</td><td>ไปประชุมวิชาการ อบรม</td></tr>
+      <tr><td><span class="badge b-red">ลาป่วย</span></td><td>ป่วยไม่สบาย</td><td>ลาใบรับรองแพทย์</td></tr>
+      <tr><td><span class="badge b-slate">ลากิจ</span></td><td>ธุระส่วนตัวจำเป็น</td><td>งานครอบครัว</td></tr>
+      <tr><td><span class="badge b-green">ไปราชการ</span></td><td>งานของหน่วยงาน</td><td>ไปราชการ ศธ. / สพป.</td></tr>
+      <tr><td><span class="badge b-amber">อื่น ๆ</span></td><td>ไม่ตรงหมวด</td><td>กรณีพิเศษ</td></tr>
+    </table>
+  </section>
+
+  <div class="foot">
+    by <strong>Photsathon Pinit</strong> · Anubannongkhwai School<br>
+    ระบบจัดสอนแทนอัตโนมัติ — คู่มือสำหรับฝ่ายวิชาการ
+  </div>
+
+</div>
+</body>
+</html>
