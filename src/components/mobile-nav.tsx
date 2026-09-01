@@ -32,9 +32,9 @@ export function MobileNav({ schoolName }: { schoolName: string }) {
           </button>
           <div className="flex-1 min-w-0 px-2">
             <div className="font-semibold text-[15px] leading-tight truncate">จัดสอนแทน</div>
-            <div className="text-[11px] text-zinc-400 truncate">{schoolName}</div>
+            <div className="text-[11px] text-zinc-300 truncate">{schoolName}</div>
           </div>
-          <div className="text-[11px] text-zinc-500 shrink-0 mr-1">ฝ่ายวิชาการ</div>
+          <div className="text-[11px] text-zinc-300 shrink-0 mr-1">ฝ่ายวิชาการ</div>
         </div>
       </header>
 
@@ -49,9 +49,9 @@ export function MobileNav({ schoolName }: { schoolName: string }) {
             <div className="px-6 py-6 border-b border-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-medium">Academic Affairs</div>
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-300 font-medium">Academic Affairs</div>
                   <h1 className="font-semibold text-[17px] tracking-tight leading-none mt-2">จัดสอนแทน</h1>
-                  <p className="text-xs text-zinc-400 mt-1.5 truncate max-w-[180px]">{schoolName}</p>
+                  <p className="text-xs text-zinc-300 mt-1.5 truncate max-w-[180px]">{schoolName}</p>
                 </div>
                 <button
                   type="button"
@@ -71,10 +71,10 @@ export function MobileNav({ schoolName }: { schoolName: string }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg text-[15px] text-zinc-300 hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition-colors"
+                  className="flex items-center justify-between px-4 py-3 rounded-lg text-[15px] text-zinc-100 hover:bg-zinc-800 hover:text-white active:bg-zinc-800 transition-colors"
                 >
                   {item.label}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
                     <path d="m9 18 6-6-6-6" />
                   </svg>
                 </Link>
@@ -82,17 +82,17 @@ export function MobileNav({ schoolName }: { schoolName: string }) {
               <Link
                 href="/settings"
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between px-4 py-3 rounded-lg text-[15px] text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300 active:bg-zinc-800 mt-4 border-t border-zinc-800 pt-4 transition-colors"
+                className="flex items-center justify-between px-4 py-3 rounded-lg text-[15px] text-zinc-200 hover:bg-zinc-800 hover:text-white active:bg-zinc-800 mt-4 border-t border-zinc-800 pt-4 transition-colors"
               >
                 ตั้งค่าชื่อโรงเรียน
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
                   <path d="m9 18 6-6-6-6" />
                 </svg>
               </Link>
             </nav>
             <div className="px-6 py-5 border-t border-zinc-800">
               <div className="text-xs font-medium text-white">ฝ่ายวิชาการ</div>
-              <div className="text-[11px] text-zinc-500">27 ครู · 1/2569</div>
+              <div className="text-[11px] text-zinc-300">27 ครู · 1/2569</div>
             </div>
           </div>
         </div>
