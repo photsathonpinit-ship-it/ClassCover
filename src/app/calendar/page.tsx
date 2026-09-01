@@ -61,13 +61,13 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Link href={`/calendar?week=${prevMon}`} className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm">
+          <Link href={`/calendar?week=${prevMon}`} className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm text-zinc-800">
             ← สัปดาห์ก่อน
           </Link>
-          <Link href="/calendar" className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm">
+          <Link href="/calendar" className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm text-zinc-800">
             สัปดาห์นี้
           </Link>
-          <Link href={`/calendar?week=${nextMon}`} className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm">
+          <Link href={`/calendar?week=${nextMon}`} className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm text-zinc-800">
             สัปดาห์หน้า →
           </Link>
         </div>

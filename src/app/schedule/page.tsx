@@ -34,7 +34,7 @@ export default async function MasterSchedulePage() {
             ภาพรวมว่าครูแต่ละคนว่างคาบไหนบ้าง (สีเขียว = ว่าง สีเทา = มีคาบสอน) — คลิกชื่อเพื่อแก้ตารางรายคน
           </p>
         </div>
-        <Link href="/teachers" className="shrink-0 bg-white border hover:bg-slate-50 px-4 h-10 inline-flex items-center rounded-md text-sm self-start sm:self-auto">
+        <Link href="/teachers" className="shrink-0 bg-white border hover:bg-slate-50 px-4 h-10 inline-flex items-center rounded-md text-sm text-zinc-800 self-start sm:self-auto">
           จัดการครู
         </Link>
       </div>

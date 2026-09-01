@@ -65,7 +65,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <div className="text-[11px] text-zinc-500">27 ครู · 1/2569</div>
           </div>
         </aside>
-        <main className="flex-1 overflow-y-auto bg-zinc-50 min-h-screen">{children}</main>
+        <main className="flex-1 flex flex-col bg-zinc-50 min-h-screen overflow-y-auto">
+          <div className="flex-1">{children}</div>
+          <footer className="px-6 py-4 border-t border-zinc-200 bg-zinc-50">
+            <p className="text-center text-xs text-zinc-600">
+              by <span className="font-medium text-zinc-900">Photsathon Pinit</span> · Anubannongkhwai School
+            </p>
+          </footer>
+        </main>
       </body>
     </html>
   );

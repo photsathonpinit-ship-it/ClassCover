@@ -105,7 +105,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/assi
             defaultValue={dateFilter}
             className="border rounded-md px-2 h-9 text-sm bg-white"
           />
-          <button className="bg-white border hover:bg-slate-50 px-3 h-9 rounded-md text-sm shrink-0">กรองวันที่</button>
+          <button className="bg-white border hover:bg-slate-50 px-3 h-9 rounded-md text-sm text-zinc-800 shrink-0">กรองวันที่</button>
           {dateFilter && (
             <Link href="/assignments" className="text-sm text-slate-500 hover:text-slate-700 inline-flex items-center h-9">
               ล้าง
@@ -123,7 +123,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/assi
               </option>
             ))}
           </select>
-          <button className="bg-white border hover:bg-slate-50 px-3 h-9 rounded-md text-sm shrink-0">กรองครู</button>
+          <button className="bg-white border hover:bg-slate-50 px-3 h-9 rounded-md text-sm text-zinc-800 shrink-0">กรองครู</button>
         </form>
         <div className="sm:ml-auto">
           <ExportCsvButton rows={csvRows} />

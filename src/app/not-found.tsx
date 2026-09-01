@@ -9,7 +9,7 @@ export default function NotFound() {
         <Link href="/" className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm inline-flex items-center justify-center">
           กลับแดชบอร์ด
         </Link>
-        <Link href="/leaves" className="bg-white border hover:bg-slate-50 px-5 h-11 rounded-md text-sm inline-flex items-center justify-center">
+        <Link href="/leaves" className="bg-white border hover:bg-slate-50 px-5 h-11 rounded-md text-sm text-zinc-800 inline-flex items-center justify-center">
           ไปหน้าการลา
         </Link>
       </div>

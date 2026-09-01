@@ -124,10 +124,10 @@ export default async function TeachersPage({ searchParams }: PageProps<"/teacher
                   <td className="px-5 py-3.5 text-sm text-zinc-600">{t.maxPeriodsPerDay}</td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1.5">
-                      <Link href={`/teachers/${t.id}/schedule`} className="text-xs bg-white border border-zinc-200 hover:bg-zinc-50 px-3 py-1.5 rounded-full">
+                      <Link href={`/teachers/${t.id}/schedule`} className="text-xs bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 px-3 py-1.5 rounded-full">
                         ตาราง
                       </Link>
-                      <Link href={`/teachers/${t.id}/edit`} className="text-xs bg-white border border-zinc-200 hover:bg-zinc-50 px-3 py-1.5 rounded-full">
+                      <Link href={`/teachers/${t.id}/edit`} className="text-xs bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 px-3 py-1.5 rounded-full">
                         แก้ไข
                       </Link>
                       <TeacherActions id={t.id} />
