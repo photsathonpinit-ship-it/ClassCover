@@ -1,6 +1,13 @@
 import { createClient } from "@libsql/client";
-import { db } from "../src/lib/db";
+import postgres from "postgres";
+import { drizzle as drizzlePg } from "drizzle-orm/postgres-js";
 import * as pg from "../src/lib/db/schema-pg";
+
+interface TeacherRow { id: number; first_name: string; last_name: string; title: string | null; subject_groups: string | null; phone: string | null; email: string | null; max_periods_per_day: number | null }
+interface ScheduleRow { id: number; teacher_id: number; day: string; period: number; subject: string; room: string | null; class_level: string | null }
+interface LeaveRow { id: number; teacher_id: number; start_date: string; end_date: string; leave_type: string; reason: string | null; status: string | null; note: string | null }
+interface AssignmentRow { id: number; leave_request_id: number; absent_teacher_id: number; substitute_teacher_id: number | null; date: string; day: string; period: number; subject: string; room: string | null; class_level: string | null; status: string | null; score: number | null; note: string | null }
+interface SettingsRow { id: number; school_name: string | null }
 
 async function main() {
   const pgUrl = process.env.POSTGRES_URL ?? process.env.POSTGRES_URL_NON_POOLING;
@@ -9,14 +16,17 @@ async function main() {
     process.exit(1);
   }
 
+  const pgClient = postgres(pgUrl, { ssl: "require" });
+  const db = drizzlePg(pgClient, { schema: pg });
+
   console.log("Reading from SQLite school.db ...");
   const sqlite = createClient({ url: "file:school.db" });
 
-  const teachersRows = (await sqlite.execute("SELECT * FROM teachers ORDER BY id")).rows as any[];
-  const schedulesRows = (await sqlite.execute("SELECT * FROM schedules ORDER BY id")).rows as any[];
-  const leavesRows = (await sqlite.execute("SELECT * FROM leave_requests ORDER BY id")).rows as any[];
-  const assignmentsRows = (await sqlite.execute("SELECT * FROM sub_assignments ORDER BY id")).rows as any[];
-  const settingsRows = (await sqlite.execute("SELECT * FROM school_settings ORDER BY id")).rows as any[];
+  const teachersRows = (await sqlite.execute("SELECT * FROM teachers ORDER BY id")).rows as unknown as TeacherRow[];
+  const schedulesRows = (await sqlite.execute("SELECT * FROM schedules ORDER BY id")).rows as unknown as ScheduleRow[];
+  const leavesRows = (await sqlite.execute("SELECT * FROM leave_requests ORDER BY id")).rows as unknown as LeaveRow[];
+  const assignmentsRows = (await sqlite.execute("SELECT * FROM sub_assignments ORDER BY id")).rows as unknown as AssignmentRow[];
+  const settingsRows = (await sqlite.execute("SELECT * FROM school_settings ORDER BY id")).rows as unknown as SettingsRow[];
 
   console.log(`  teachers: ${teachersRows.length}`);
   console.log(`  schedules: ${schedulesRows.length}`);
@@ -31,8 +41,7 @@ async function main() {
   await db.delete(pg.teachers);
   await db.delete(pg.schoolSettings);
 
-  // Note: IDs are identity columns; we insert without explicit ids to let PG assign them,
-  // then remap old -> new ids to preserve relations.
+  // IDs เป็น identity column — ปล่อยให้ PG กำหนดใหม่ แล้ว map old -> new กันความสัมพันธ์
   console.log("Inserting teachers ...");
   const newTeachers = await db
     .insert(pg.teachers)
@@ -60,7 +69,7 @@ async function main() {
     if (newTid == null) continue;
     await db.insert(pg.schedules).values({
       teacherId: newTid,
-      day: s.day,
+      day: s.day as pg.Day,
       period: s.period,
       subject: s.subject,
       room: s.room,
@@ -76,9 +85,9 @@ async function main() {
         teacherId: teacherIdMap.get(Number(l.teacher_id)) ?? 0,
         startDate: l.start_date,
         endDate: l.end_date,
-        leaveType: l.leave_type,
+        leaveType: l.leave_type as pg.LeaveType,
         reason: l.reason,
-        status: l.status,
+        status: (l.status ?? "pending") as "pending" | "approved" | "rejected",
         note: l.note,
       }))
     )
@@ -99,12 +108,12 @@ async function main() {
       absentTeacherId: newAbsent,
       substituteTeacherId: newSub,
       date: a.date,
-      day: a.day,
+      day: a.day as pg.Day,
       period: a.period,
       subject: a.subject,
       room: a.room,
       classLevel: a.class_level,
-      status: a.status,
+      status: (a.status ?? "pending") as "pending" | "assigned" | "completed",
       score: a.score,
       note: a.note,
     });
@@ -118,6 +127,7 @@ async function main() {
   }
 
   console.log("Seed complete!");
+  await pgClient.end();
 }
 
 main().catch((e) => {

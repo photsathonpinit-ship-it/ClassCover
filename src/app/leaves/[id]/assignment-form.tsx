@@ -97,7 +97,7 @@ export function AssignmentForm({
                     <select
                       value={selections[slot.key] ?? ""}
                       onChange={(e) => setSelections((prev) => ({ ...prev, [slot.key]: e.target.value }))}
-                      className="w-full border rounded-md px-3 py-2 text-sm bg-white"
+                      className="w-full border rounded-md px-3 h-11 text-sm bg-white"
                     >
                       <option value="">-- ไม่จัดคาบนี้ --</option>
                       {slot.candidates.map((c) => (
@@ -132,11 +132,11 @@ export function AssignmentForm({
       )}
 
       {slots.length > 0 && (
-        <div className="mt-5 flex items-center gap-3">
+        <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <button
             disabled={pending}
             onClick={() => startTransition(onConfirm)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium disabled:opacity-50"
           >
             {pending ? "กำลังบันทึก..." : savedCount > 0 ? "ยืนยันการจัดแทน" : "จัดแทนอัตโนมัติทั้งหมด"}
           </button>

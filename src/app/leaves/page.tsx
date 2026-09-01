@@ -25,22 +25,57 @@ export default async function LeavesPage() {
     .orderBy(desc(leaveRequests.startDate));
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-8">
-      <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
           <div className="text-[11px] uppercase tracking-[0.18em] text-zinc-500 font-medium">การลา · ติดตามสถานะ</div>
-          <h1 className="text-4xl tracking-tighter leading-none font-bold text-zinc-900 mt-2">การลา / ไปราชการ</h1>
+          <h1 className="text-3xl md:text-4xl tracking-tighter leading-none font-bold text-zinc-900 mt-2">การลา / ไปราชการ</h1>
           <p className="text-sm text-zinc-600 leading-relaxed max-w-[65ch] mt-2">บันทึกการลาและติดตามการจัดสอนแทน — กดดู/จัดแทนเพื่อแนะนำครูว่างตามวิชาตรงและภาระน้อย</p>
         </div>
         <Link
           href="/leaves/new"
-          className="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2 rounded-full text-sm font-medium transition-colors"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white px-5 h-11 rounded-full text-sm font-medium transition-colors flex items-center justify-center shrink-0"
         >
           + บันทึกการลา
         </Link>
       </div>
 
-      <div className="bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
+      {/* มือถือ: รายการแบบการ์ด */}
+      <div className="md:hidden divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
+        {rows.map(({ leave, teacher }) => (
+          <Link
+            key={leave.id}
+            href={`/leaves/${leave.id}`}
+            className="block px-4 py-4 active:bg-zinc-50 transition-colors"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-[15px] font-medium text-zinc-900">
+                {teacher.title} {teacher.firstName} {teacher.lastName}
+              </div>
+              <span className={`inline-block text-xs px-2 py-1 rounded-full shrink-0 ${LEAVE_TYPE_COLORS[leave.leaveType] || LEAVE_TYPE_COLORS["อื่นๆ"]}`}>
+                {leave.leaveType}
+              </span>
+            </div>
+            <div className="mt-1.5 text-sm text-zinc-600">
+              {leave.startDate}
+              {leave.startDate !== leave.endDate && <> → {leave.endDate}</>}
+            </div>
+            {leave.reason && <div className="mt-1 text-xs text-zinc-500 truncate">{leave.reason}</div>}
+            <div className="mt-2 flex items-center justify-between">
+              <LeaveStatusBadge status={leave.status} />
+              <span className="text-xs text-blue-600 font-medium">ดู / จัดแทน →</span>
+            </div>
+          </Link>
+        ))}
+        {rows.length === 0 && (
+          <div className="px-5 py-12 text-center text-sm text-zinc-500">
+            ยังไม่มีบันทึกการลา — กด “บันทึกการลา” เพื่อเริ่ม
+          </div>
+        )}
+      </div>
+
+      {/* เดสก์ท็อป: ตาราง */}
+      <div className="hidden md:block bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
         <table className="min-w-full divide-y divide-zinc-200">
           <thead className="bg-zinc-50/80">
             <tr className="text-left text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">

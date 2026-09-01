@@ -28,13 +28,13 @@ export default async function LeaveDetailPage({ params }: PageProps<"/leaves/[id
     .where(eq(subAssignments.leaveRequestId, idNum));
 
   return (
-    <div className="p-8">
+    <div className="px-4 sm:px-6 md:p-8 py-6">
       <div className="mb-6">
         <Link href="/leaves" className="text-sm text-blue-600 hover:underline">← กลับรายการลา</Link>
         <h1 className="text-2xl font-bold mt-1">รายละเอียดการลา</h1>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
         <div className="bg-white rounded-lg shadow-sm p-4">
           <div className="text-xs text-slate-500 mb-1">ครูที่ลา</div>
           <div className="font-medium">{absentTeacher ? getTeacherName(absentTeacher) : "-"}</div>

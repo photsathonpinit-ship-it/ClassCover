@@ -15,13 +15,13 @@ export function ScheduleEditor({ teacherId, grid }: { teacherId: number; grid: R
   const dayCols: Day[] = [...DAYS];
 
   return (
-    <form action={saveTeacherSchedule} className="bg-white rounded-lg shadow-sm p-6">
+    <form action={saveTeacherSchedule} className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
       <input type="hidden" name="teacherId" value={teacherId} />
       <p className="text-sm text-slate-500 mb-4">
         กรอกวิชาที่สอนในแต่ละคาบ (ว่างไว้ถ้าไม่มีคาบ) ขนาดตารางใหญ่สามารถเลื่อนดูด้านข้างได้
       </p>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
         <table className="min-w-full border-collapse">
           <thead>
             <tr>
@@ -74,16 +74,16 @@ export function ScheduleEditor({ teacherId, grid }: { teacherId: number; grid: R
         </table>
       </div>
 
-      <div className="mt-4 flex gap-3">
+      <div className="mt-4 flex flex-col-reverse sm:flex-row gap-3">
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm font-medium"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium"
         >
           บันทึกตารางสอน
         </button>
         <Link
           href="/teachers"
-          className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-md text-sm font-medium"
+          className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 h-11 rounded-md text-sm font-medium inline-flex items-center justify-center"
         >
           ยกเลิก
         </Link>

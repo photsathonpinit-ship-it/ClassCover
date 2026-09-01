@@ -14,8 +14,8 @@ export default async function Home() {
   let pendingLeaveCount: { count: number } | undefined;
   let assignedCount: { count: number } | undefined;
   let unassignedCount: { count: number } | undefined;
-  let pendingLeaves: any[] = [];
-  let recentAssignments: any[] = [];
+  let pendingLeaves: { leave: typeof leaveRequests.$inferSelect; teacher: typeof teachersTable.$inferSelect }[] = [];
+  let recentAssignments: { a: typeof subAssignments.$inferSelect; absent: typeof teachersTable.$inferSelect; substitute: typeof teachersTable.$inferSelect | null }[] = [];
   try {
     [teacherCount] = await db.select({ count: sql<number>`count(*)` }).from(teachersTable);
     [pendingLeaveCount] = await db.select({ count: sql<number>`count(*)` }).from(leaveRequests).where(eq(leaveRequests.status, "pending"));
@@ -29,9 +29,9 @@ export default async function Home() {
     console.error("DB not ready on Vercel yet:", e);
   }
 
-  let weeklyRows: any[] = [];
-  let teacherMap = new Map();
-  let workload: any[] = [];
+  let weeklyRows: { sid: number | null; cnt: number }[] = [];
+  let teacherMap = new Map<number, typeof teachersTable.$inferSelect>();
+  let workload: { teacher?: typeof teachersTable.$inferSelect; count: number }[] = [];
   let schoolName = "โรงเรียนประถม";
   const today = new Date();
   const dow = today.getDay(); // 0=อา
@@ -75,7 +75,7 @@ export default async function Home() {
 
   // modern — Linear-style minimal, trust-first
   return (
-    <div className="max-w-[1280px] mx-auto px-6 md:px-8 py-10">
+    <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-10">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
         <div>
           <div className="text-[11px] uppercase tracking-[0.18em] text-zinc-500 font-medium">{schoolName} · ภาคเรียนที่ 1/2569</div>

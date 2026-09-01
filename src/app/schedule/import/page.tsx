@@ -4,14 +4,14 @@ export const dynamic = "force-dynamic";
 
 export default function ImportSchedulePage() {
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="px-4 sm:px-6 md:p-8 py-6 max-w-3xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">นำเข้าตารางสอนจำนวนมาก</h1>
         <p className="text-sm text-slate-500 mt-1">สำหรับโรงใหญ่ 30-100 คน — ใช้ไฟล์ CSV เดียวจบ ไม่ต้องกรอกทีละคน</p>
         <Link href="/schedule" className="text-sm text-blue-600 hover:underline">← กลับตารางรวม</Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
+      <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-6 overflow-x-auto">
         <div>
           <h2 className="font-semibold mb-2">1) ดาวน์โหลดเทมเพลต</h2>
           <p className="text-sm text-slate-600 mb-3">ไฟล์ตัวอย่าง 5 แถว มีหัวคอลัมน์ครบ — เปิดด้วย Excel/Google Sheets ได้</p>

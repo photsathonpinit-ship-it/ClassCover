@@ -52,28 +52,28 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
   const nextMon = format(addDays(mon, 7));
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-4 sm:px-6 md:p-8 py-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold">ปฏิทินรายสัปดาห์</h1>
           <p className="text-sm text-slate-500 mt-1">
             สัปดาห์ {dayStrs[0]} → {dayStrs[4]} · ดูการลาและคาบที่จัดแทนแต่ละวัน
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Link href={`/calendar?week=${prevMon}`} className="bg-white border hover:bg-slate-50 px-3 py-2 rounded-md text-sm">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link href={`/calendar?week=${prevMon}`} className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm">
             ← สัปดาห์ก่อน
           </Link>
-          <Link href="/calendar" className="bg-white border hover:bg-slate-50 px-3 py-2 rounded-md text-sm">
+          <Link href="/calendar" className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm">
             สัปดาห์นี้
           </Link>
-          <Link href={`/calendar?week=${nextMon}`} className="bg-white border hover:bg-slate-50 px-3 py-2 rounded-md text-sm">
+          <Link href={`/calendar?week=${nextMon}`} className="bg-white border hover:bg-slate-50 px-3 h-9 inline-flex items-center rounded-md text-sm">
             สัปดาห์หน้า →
           </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
         {days.map((d, idx) => {
           const ds = dayStrs[idx];
           const dayKey = DAYS_ORDER[idx];

@@ -4,7 +4,7 @@ export function PrintButton() {
   return (
     <button
       onClick={() => window.print()}
-      className="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-md text-sm font-medium print:hidden"
+      className="bg-slate-800 hover:bg-slate-900 text-white px-4 h-11 rounded-md text-sm font-medium print:hidden shrink-0"
     >
       พิมพ์ตาราง
     </button>
@@ -26,7 +26,7 @@ export function ExportCsvButton({ rows }: { rows: string[][] }) {
     URL.revokeObjectURL(url);
   };
   return (
-    <button onClick={onExport} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-sm print:hidden">
+    <button onClick={onExport} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 h-9 rounded-md text-sm print:hidden shrink-0">
       ส่งออก CSV
     </button>
   );

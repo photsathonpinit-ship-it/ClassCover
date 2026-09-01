@@ -15,38 +15,79 @@ export default async function TeachersPage({ searchParams }: PageProps<"/teacher
     : rows;
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 md:px-8 py-8">
-      <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
           <div className="text-[11px] uppercase tracking-[0.18em] text-zinc-500 font-medium">บุคลากร · 27 คนในระบบ</div>
-          <h1 className="text-4xl tracking-tighter leading-none font-bold text-zinc-900 mt-2">จัดการครู</h1>
+          <h1 className="text-3xl md:text-4xl tracking-tighter leading-none font-bold text-zinc-900 mt-2">จัดการครู</h1>
           <p className="text-sm text-zinc-600 leading-relaxed max-w-[65ch] mt-2">เพิ่ม แก้ไข ค้นหาตามชื่อ/วิชา — ข้อมูลนี้ใช้คำนวณครูว่างและการจัดแทน</p>
         </div>
-        <div className="flex items-center gap-3">
-          <form className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
+          <form className="flex items-center gap-2 w-full sm:w-auto">
             <input
               name="q"
               defaultValue={q}
               placeholder="ค้นหาชื่อ / วิชา / เบอร์..."
-              className="bg-white border border-zinc-200 rounded-full px-4 py-2 text-sm w-56 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-300"
+              className="bg-white border border-zinc-200 rounded-full px-4 h-11 text-sm flex-1 sm:w-56 min-w-0 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-300"
             />
-            <button className="bg-white border border-zinc-200 hover:bg-zinc-50 px-4 py-2 rounded-full text-sm text-zinc-700">ค้นหา</button>
+            <button className="bg-white border border-zinc-200 hover:bg-zinc-50 px-4 h-11 rounded-full text-sm text-zinc-700 shrink-0">ค้นหา</button>
             {q && (
-              <Link href="/teachers" className="text-sm text-zinc-500 hover:text-zinc-700">
+              <Link href="/teachers" className="text-sm text-zinc-500 hover:text-zinc-700 shrink-0">
                 ล้าง
               </Link>
             )}
           </form>
           <Link
             href="/teachers/new"
-            className="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2 rounded-full text-sm font-medium shrink-0 transition-colors"
+            className="bg-zinc-900 hover:bg-zinc-800 text-white px-5 h-11 rounded-full text-sm font-medium shrink-0 transition-colors flex items-center justify-center"
           >
             + เพิ่มครู
           </Link>
         </div>
       </div>
 
-      <div className="bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
+      {/* มือถือ: รายการแบบการ์ด */}
+      <div className="md:hidden divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
+        {filtered.map((t) => {
+          let groups: string[] = [];
+          try {
+            groups = JSON.parse(t.subjectGroups || "[]");
+          } catch {
+            groups = [];
+          }
+          return (
+            <div key={t.id} className="px-4 py-4">
+              <div className="flex items-start justify-between gap-3">
+                <Link href={`/teachers/${t.id}/edit`} className="text-[15px] font-medium text-zinc-900">
+                  {t.title} {t.firstName} {t.lastName}
+                </Link>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {groups.map((g) => (
+                  <span key={g} className="inline-block bg-zinc-100 text-zinc-700 border border-zinc-200 text-xs px-2 py-1 rounded-full">
+                    {g}
+                  </span>
+                ))}
+                {groups.length === 0 && <span className="text-xs text-zinc-400">— ไม่ระบุวิชา —</span>}
+              </div>
+              <div className="mt-2 text-xs text-zinc-500">
+                โทร {t.phone ?? "—"} · สอนแทนสูงสุด {t.maxPeriodsPerDay} คาบ/วัน
+              </div>
+              <div className="mt-3 pt-3 border-t border-zinc-100">
+                <TeacherActions id={t.id} />
+              </div>
+            </div>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="px-5 py-12 text-center text-sm text-zinc-500">
+            {q ? `ไม่พบครูที่ตรงกับ “${q}”` : "ยังไม่มีข้อมูลครู — เพิ่มครูคนแรกได้เลย"}
+          </div>
+        )}
+      </div>
+
+      {/* เดสก์ท็อป: ตาราง */}
+      <div className="hidden md:block bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
         <table className="min-w-full divide-y divide-zinc-200">
           <thead className="bg-zinc-50/80">
             <tr className="text-left text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-500">

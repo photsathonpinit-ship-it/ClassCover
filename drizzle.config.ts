@@ -8,4 +8,4 @@ export default defineConfig({
   dbCredentials: pgUrl?.startsWith("postgres")
     ? { url: pgUrl }
     : { url: "file:./school.db" },
-} as any);
+});

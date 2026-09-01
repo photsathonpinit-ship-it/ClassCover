@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { MobileNav } from "@/components/mobile-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,8 +38,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="th"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex bg-zinc-50 text-zinc-900">
-        <aside className="w-[256px] shrink-0 bg-zinc-950 text-zinc-100 flex flex-col sticky top-0 h-screen border-r border-zinc-900">
+      <body className="min-h-full md:flex bg-zinc-50 text-zinc-900">
+        <MobileNav schoolName={schoolName} />
+        <aside className="hidden md:flex w-[256px] shrink-0 bg-zinc-950 text-zinc-100 flex-col sticky top-0 h-screen border-r border-zinc-900">
           <div className="px-6 py-7 border-b border-zinc-800">
             <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-medium">Academic Affairs</div>
             <h1 className="font-semibold text-[17px] tracking-tight leading-none mt-2">จัดสอนแทน</h1>

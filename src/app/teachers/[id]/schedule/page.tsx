@@ -30,7 +30,7 @@ export default async function TeacherSchedulePage({ params }: PageProps<"/teache
   }
 
   return (
-    <div className="p-8">
+    <div className="px-4 sm:px-6 md:p-8 py-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">
           ตารางสอนของ {teacher.title} {teacher.firstName} {teacher.lastName}
