@@ -45,3 +45,6 @@ school.db
 school.db-journal
 school.db-wal
 school.db-shm
+
+.vercel
+.env*
