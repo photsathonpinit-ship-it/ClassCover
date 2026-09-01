@@ -43,3 +43,5 @@ next-env.d.ts
 # school db (อย่าดันไฟล์จริงขึ้น Git - ใช้ Turso บนคลาวด์)
 school.db
 school.db-journal
+school.db-wal
+school.db-shm
