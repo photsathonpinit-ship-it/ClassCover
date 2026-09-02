@@ -8,7 +8,8 @@ import { LeaveStatusBadge } from "../leave-status";
 import { previewLeaveSlots } from "./actions";
 import { LeaveStatusForm } from "./leave-status-form";
 import { AssignmentForm } from "./assignment-form";
-import { LeaveLineButton } from "@/components/line-notify-buttons";
+import { CopyLeaveButton } from "@/components/copy-line-summary";
+import { getSchoolName } from "@/lib/school";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,21 @@ export default async function LeaveDetailPage({ params }: PageProps<"/leaves/[id
     .from(subAssignments)
     .leftJoin(teachers, eq(teachers.id, subAssignments.substituteTeacherId))
     .where(eq(subAssignments.leaveRequestId, idNum));
+
+  const schoolName = await getSchoolName().catch(() => "โรงเรียน");
+  const savedSlotsForCopy = savedAssignments
+    .map(({ a, teacher }) => ({
+      date: a.date,
+      day: a.day,
+      period: a.period,
+      subject: a.subject,
+      classLevel: a.classLevel,
+      room: a.room,
+      substituteName: teacher ? getTeacherName(teacher) : null,
+    }))
+    .sort((x, y) => (x.date === y.date ? x.period - y.period : x.date.localeCompare(y.date)));
+  const absentNameForCopy = absentTeacher ? getTeacherName(absentTeacher) : "-";
+  const dateRangeForCopy = leave.startDate === leave.endDate ? leave.startDate : `${leave.startDate} - ${leave.endDate}`;
 
   return (
     <div className="px-4 sm:px-6 md:p-8 py-6">
@@ -74,7 +90,14 @@ export default async function LeaveDetailPage({ params }: PageProps<"/leaves/[id
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <LeaveLineButton leaveId={leave.id} />
+            <CopyLeaveButton
+              schoolName={schoolName}
+              absentName={absentNameForCopy}
+              leaveType={leave.leaveType}
+              dateRange={dateRangeForCopy}
+              reason={leave.reason}
+              slots={savedSlotsForCopy.length > 0 ? savedSlotsForCopy : preview.map((p) => ({ date: p.date, day: p.day, period: p.period, subject: p.subject, classLevel: p.classLevel, room: p.room, substituteName: null }))}
+            />
             {savedAssignments.length > 0 && (
               <Link href="/assignments" className="shrink-0 bg-white border hover:bg-slate-50 text-zinc-800 px-4 h-9 inline-flex items-center rounded-full text-sm">
                 ดูรายการจัดแทนทั้งหมด →

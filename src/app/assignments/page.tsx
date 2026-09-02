@@ -6,7 +6,9 @@ import { subAssignments, teachers as teachersTable } from "@/lib/db/schema";
 import { DAY_LABELS } from "@/lib/dates";
 import { deleteAssignment, updateAssignmentStatus } from "./actions";
 import { ExportCsvButton, PrintButton } from "./assignment-row-actions";
-import { BulkLineButton } from "@/components/line-notify-buttons";
+import { CopyAssignmentsButton } from "@/components/copy-line-summary";
+import { getSchoolName } from "@/lib/school";
+import { getTeacherName } from "@/lib/teacher-name";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +49,19 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/assi
   if (statusFilter) filtered = filtered.filter((r) => r.a.status === statusFilter);
   if (dateFilter) filtered = filtered.filter((r) => r.a.date === dateFilter);
   if (teacherFilter) filtered = filtered.filter((r) => r.a.substituteTeacherId === teacherFilter || r.a.absentTeacherId === teacherFilter);
+
+  const schoolName = await getSchoolName().catch(() => "โรงเรียน");
+  const copyAssignments = filtered.map(({ a, absent, substitute }) => ({
+    date: a.date,
+    day: a.day,
+    period: a.period,
+    subject: a.subject,
+    classLevel: a.classLevel,
+    room: a.room,
+    absentName: getTeacherName(absent),
+    substituteName: substitute ? getTeacherName(substitute as typeof absent) : null,
+  }));
+  const copyTitle = dateFilter ? `สรุปจัดสอนแทน ${dateFilter}` : statusFilter ? `สรุปจัดสอนแทน ${STATUS_LABELS[statusFilter] ?? statusFilter}` : "สรุปจัดสอนแทน";
 
   // สำหรับส่งออก CSV (escape)
   const csvRows = filtered.map(({ a, absent, substitute }) => {
@@ -127,7 +142,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/assi
           <button className="bg-white border hover:bg-slate-50 px-3 h-9 rounded-md text-sm text-zinc-800 shrink-0">กรองครู</button>
         </form>
         <div className="sm:ml-auto flex flex-wrap items-center gap-2">
-          <BulkLineButton status={statusFilter || undefined} date={dateFilter || undefined} teacherId={teacherFilter ? String(teacherFilter) : undefined} />
+          <CopyAssignmentsButton schoolName={schoolName} title={copyTitle} assignments={copyAssignments} />
           <ExportCsvButton rows={csvRows} />
         </div>
       </div>
