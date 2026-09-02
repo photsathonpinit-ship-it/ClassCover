@@ -9,6 +9,9 @@ import {
   findMissingSlotsForLeave,
 } from "@/lib/scheduling";
 import { getTeacherName } from "@/lib/teacher-name";
+import { getSchoolName } from "@/lib/school";
+import { formatLeaveMessage, getLineConfig, sendLinePush } from "@/lib/line";
+import { alias } from "drizzle-orm/sqlite-core";
 
 export interface PreviewSlot {
   key: string;
@@ -106,6 +109,46 @@ export async function confirmAssignments(formData: FormData) {
   revalidatePath(`/leaves/${leaveId}`);
   revalidatePath("/leaves");
   revalidatePath("/assignments");
+
+  // ส่ง LINE อัตโนมัติแบบเงียบ — ไม่ตั้งค่า = ข้าม, ล้มเหลว = ไม่ทำให้บันทึกพัง
+  try {
+    const cfg = await getLineConfig();
+    if (cfg) {
+      const schoolName = await getSchoolName();
+      const absent = await db.query.teachers.findFirst({ where: eq(teachers.id, leave.teacherId) });
+      const absentName = absent ? getTeacherName(absent) : `ครู #${leave.teacherId}`;
+      const subAlias = alias(teachers, "subAuto");
+      const rows = await db
+        .select({ a: subAssignments, sub: subAlias })
+        .from(subAssignments)
+        .leftJoin(subAlias, eq(subAlias.id, subAssignments.substituteTeacherId))
+        .where(eq(subAssignments.leaveRequestId, leaveId));
+      const slotsMsg = rows
+        .map(({ a, sub }) => ({
+          date: a.date,
+          day: a.day,
+          period: a.period,
+          subject: a.subject,
+          classLevel: a.classLevel,
+          room: a.room,
+          substituteName: sub ? getTeacherName(sub) : null,
+        }))
+        .sort((x, y) => (x.date === y.date ? x.period - y.period : x.date.localeCompare(y.date)));
+      const dateRange = leave.startDate === leave.endDate ? leave.startDate : `${leave.startDate} - ${leave.endDate}`;
+      const text = formatLeaveMessage({
+        schoolName,
+        absentName,
+        leaveType: leave.leaveType,
+        dateRange,
+        reason: leave.reason,
+        slots: slotsMsg,
+      });
+      await sendLinePush(cfg.token, cfg.groupId, text);
+    }
+  } catch (e) {
+    console.error("[LINE auto]", e);
+  }
+
   return { ok: true };
 }
 

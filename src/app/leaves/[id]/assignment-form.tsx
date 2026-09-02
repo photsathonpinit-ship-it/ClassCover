@@ -140,7 +140,7 @@ export function AssignmentForm({
           >
             {pending ? "กำลังบันทึก..." : savedCount > 0 ? "ยืนยันการจัดแทน" : "จัดแทนอัตโนมัติทั้งหมด"}
           </button>
-          {done && <span className="text-sm text-emerald-600">บันทึกการจัดแทนเรียบร้อยแล้ว — รีเฟรชเพื่อดูรายการล่าสุด</span>}
+          {done && <span className="text-sm text-emerald-600">บันทึกแล้ว ✓ ระบบส่งแจ้ง LINE กลุ่มอัตโนมัติแล้ว (ถ้าตั้งค่าไว้) — รีเฟรชเพื่อดูรายการล่าสุด</span>}
         </div>
       )}
     </div>
