@@ -9,6 +9,7 @@ import { previewLeaveSlots } from "./actions";
 import { LeaveStatusForm } from "./leave-status-form";
 import { AssignmentForm } from "./assignment-form";
 import { CopyLeaveButton } from "@/components/copy-line-summary";
+import { LeaveImageButton } from "@/components/export-image";
 import { getSchoolName } from "@/lib/school";
 
 export const dynamic = "force-dynamic";
@@ -91,6 +92,14 @@ export default async function LeaveDetailPage({ params }: PageProps<"/leaves/[id
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <CopyLeaveButton
+              schoolName={schoolName}
+              absentName={absentNameForCopy}
+              leaveType={leave.leaveType}
+              dateRange={dateRangeForCopy}
+              reason={leave.reason}
+              slots={savedSlotsForCopy.length > 0 ? savedSlotsForCopy : preview.map((p) => ({ date: p.date, day: p.day, period: p.period, subject: p.subject, classLevel: p.classLevel, room: p.room, substituteName: null }))}
+            />
+            <LeaveImageButton
               schoolName={schoolName}
               absentName={absentNameForCopy}
               leaveType={leave.leaveType}
