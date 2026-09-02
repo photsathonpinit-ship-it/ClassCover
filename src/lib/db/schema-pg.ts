@@ -74,5 +74,7 @@ export const subAssignments = pgTable(
 export const schoolSettings = pgTable("school_settings", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   schoolName: text("school_name").notNull().default("โรงเรียนประถม"),
+  lineChannelToken: text("line_channel_token"),
+  lineGroupId: text("line_group_id"),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });

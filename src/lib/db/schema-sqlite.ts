@@ -101,10 +101,12 @@ export const subAssignments = sqliteTable(
 );
 export type SubAssignment = typeof subAssignments.$inferSelect;
 
-// ตั้งค่าโรงเรียน (เก็บชื่อโรงเรียนที่กรอกเองได้)
+// ตั้งค่าโรงเรียน (เก็บชื่อโรงเรียนที่กรอกเองได้ + LINE กลุ่ม)
 export const schoolSettings = sqliteTable("school_settings", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   schoolName: text("school_name").notNull().default("โรงเรียนประถม"),
+  lineChannelToken: text("line_channel_token"),
+  lineGroupId: text("line_group_id"),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 export type SchoolSettings = typeof schoolSettings.$inferSelect;

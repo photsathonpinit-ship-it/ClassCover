@@ -8,6 +8,7 @@ import { LeaveStatusBadge } from "../leave-status";
 import { previewLeaveSlots } from "./actions";
 import { LeaveStatusForm } from "./leave-status-form";
 import { AssignmentForm } from "./assignment-form";
+import { LeaveLineButton } from "@/components/line-notify-buttons";
 
 export const dynamic = "force-dynamic";
 
@@ -65,18 +66,21 @@ export default async function LeaveDetailPage({ params }: PageProps<"/leaves/[id
 
       {/* คาบที่ขาด + ระบบจัดแทน */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
           <div>
             <h2 className="text-lg font-semibold mb-1">การจัดสอนแทน</h2>
             <p className="text-sm text-slate-500">
               ระบบพบคาบสอนที่ขาด {preview.length} คาบ โดยแนะนำครูที่ว่าง (เลือกครูที่ต้องการได้จาก dropdown)
             </p>
           </div>
-          {savedAssignments.length > 0 && (
-            <Link href="/assignments" className="shrink-0 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-md text-sm">
-              ดูรายการจัดแทนทั้งหมด →
-            </Link>
-          )}
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <LeaveLineButton leaveId={leave.id} />
+            {savedAssignments.length > 0 && (
+              <Link href="/assignments" className="shrink-0 bg-white border hover:bg-slate-50 text-zinc-800 px-4 h-9 inline-flex items-center rounded-full text-sm">
+                ดูรายการจัดแทนทั้งหมด →
+              </Link>
+            )}
+          </div>
         </div>
 
         <AssignmentForm

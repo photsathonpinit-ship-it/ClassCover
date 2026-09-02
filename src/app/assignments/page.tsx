@@ -6,6 +6,7 @@ import { subAssignments, teachers as teachersTable } from "@/lib/db/schema";
 import { DAY_LABELS } from "@/lib/dates";
 import { deleteAssignment, updateAssignmentStatus } from "./actions";
 import { ExportCsvButton, PrintButton } from "./assignment-row-actions";
+import { BulkLineButton } from "@/components/line-notify-buttons";
 
 export const dynamic = "force-dynamic";
 
@@ -125,7 +126,8 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/assi
           </select>
           <button className="bg-white border hover:bg-slate-50 px-3 h-9 rounded-md text-sm text-zinc-800 shrink-0">กรองครู</button>
         </form>
-        <div className="sm:ml-auto">
+        <div className="sm:ml-auto flex flex-wrap items-center gap-2">
+          <BulkLineButton status={statusFilter || undefined} date={dateFilter || undefined} teacherId={teacherFilter ? String(teacherFilter) : undefined} />
           <ExportCsvButton rows={csvRows} />
         </div>
       </div>
