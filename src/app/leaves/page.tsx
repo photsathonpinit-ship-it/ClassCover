@@ -3,6 +3,7 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { leaveRequests, teachers } from "@/lib/db/schema";
 import { LeaveStatusBadge } from "./leave-status";
+import { DeleteLeaveButton } from "@/components/delete-leave-button";
 
 export const dynamic = "force-dynamic";
 
@@ -43,29 +44,33 @@ export default async function LeavesPage() {
       {/* มือถือ: รายการแบบการ์ด */}
       <div className="md:hidden divide-y divide-zinc-100 bg-white border border-zinc-200 rounded-[14px] overflow-hidden">
         {rows.map(({ leave, teacher }) => (
-          <Link
-            key={leave.id}
-            href={`/leaves/${leave.id}`}
-            className="block px-4 py-4 active:bg-zinc-50 transition-colors"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-[15px] font-medium text-zinc-900">
-                {teacher.title} {teacher.firstName} {teacher.lastName}
+          <div key={leave.id} className="px-4 py-4">
+            <Link href={`/leaves/${leave.id}`} className="block active:opacity-70">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-[15px] font-medium text-zinc-900">
+                  {teacher.title} {teacher.firstName} {teacher.lastName}
+                </div>
+                <span className={`inline-block text-xs px-2 py-1 rounded-full shrink-0 ${LEAVE_TYPE_COLORS[leave.leaveType] || LEAVE_TYPE_COLORS["อื่นๆ"]}`}>
+                  {leave.leaveType}
+                </span>
               </div>
-              <span className={`inline-block text-xs px-2 py-1 rounded-full shrink-0 ${LEAVE_TYPE_COLORS[leave.leaveType] || LEAVE_TYPE_COLORS["อื่นๆ"]}`}>
-                {leave.leaveType}
-              </span>
+              <div className="mt-1.5 text-sm text-zinc-600">
+                {leave.startDate}
+                {leave.startDate !== leave.endDate && <> → {leave.endDate}</>}
+              </div>
+              {leave.reason && <div className="mt-1 text-xs text-zinc-500 truncate">{leave.reason}</div>}
+              <div className="mt-2 flex items-center justify-between">
+                <LeaveStatusBadge status={leave.status} />
+                <span className="text-xs text-blue-600 font-medium">ดู / จัดแทน →</span>
+              </div>
+            </Link>
+            <div className="mt-3 pt-3 border-t border-zinc-100 flex items-center justify-end gap-2">
+              <Link href={`/leaves/${leave.id}`} className="text-xs bg-white border hover:bg-zinc-50 text-zinc-700 px-3 py-1.5 rounded-full">
+                ดู / จัดแทน
+              </Link>
+              <DeleteLeaveButton id={leave.id} compact />
             </div>
-            <div className="mt-1.5 text-sm text-zinc-600">
-              {leave.startDate}
-              {leave.startDate !== leave.endDate && <> → {leave.endDate}</>}
-            </div>
-            {leave.reason && <div className="mt-1 text-xs text-zinc-500 truncate">{leave.reason}</div>}
-            <div className="mt-2 flex items-center justify-between">
-              <LeaveStatusBadge status={leave.status} />
-              <span className="text-xs text-blue-600 font-medium">ดู / จัดแทน →</span>
-            </div>
-          </Link>
+          </div>
         ))}
         {rows.length === 0 && (
           <div className="px-5 py-12 text-center text-sm text-zinc-500">
@@ -105,9 +110,12 @@ export default async function LeavesPage() {
                 <td className="px-5 py-3.5 text-sm text-zinc-500 max-w-xs truncate">{leave.reason ?? "—"}</td>
                 <td className="px-5 py-3.5"><LeaveStatusBadge status={leave.status} /></td>
                 <td className="px-5 py-3.5 text-right">
-                  <Link href={`/leaves/${leave.id}`} className="text-sm text-zinc-700 hover:text-zinc-900 border border-zinc-200 hover:bg-zinc-50 px-3 py-1.5 rounded-full">
-                    ดู/จัดแทน
-                  </Link>
+                  <div className="inline-flex items-center gap-2">
+                    <Link href={`/leaves/${leave.id}`} className="text-sm text-zinc-700 hover:text-zinc-900 border border-zinc-200 hover:bg-zinc-50 px-3 py-1.5 rounded-full">
+                      ดู/จัดแทน
+                    </Link>
+                    <DeleteLeaveButton id={leave.id} compact />
+                  </div>
                 </td>
               </tr>
             ))}

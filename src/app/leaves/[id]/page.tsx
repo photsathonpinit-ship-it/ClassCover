@@ -10,6 +10,7 @@ import { LeaveStatusForm } from "./leave-status-form";
 import { AssignmentForm } from "./assignment-form";
 import { CopyLeaveButton } from "@/components/copy-line-summary";
 import { LeaveImageButton } from "@/components/export-image";
+import { DeleteLeaveButton } from "@/components/delete-leave-button";
 import { getSchoolName } from "@/lib/school";
 
 export const dynamic = "force-dynamic";
@@ -47,9 +48,14 @@ export default async function LeaveDetailPage({ params }: PageProps<"/leaves/[id
 
   return (
     <div className="px-4 sm:px-6 md:p-8 py-6">
-      <div className="mb-6">
-        <Link href="/leaves" className="text-sm text-blue-600 hover:underline">← กลับรายการลา</Link>
-        <h1 className="text-2xl font-bold mt-1">รายละเอียดการลา</h1>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <Link href="/leaves" className="text-sm text-blue-600 hover:underline">← กลับรายการลา</Link>
+          <h1 className="text-2xl font-bold mt-1">รายละเอียดการลา</h1>
+        </div>
+        <div className="shrink-0 pt-1">
+          <DeleteLeaveButton id={leave.id} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6">

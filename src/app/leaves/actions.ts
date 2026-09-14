@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { leaveRequests, type LeaveType } from "@/lib/db/schema";
+import { leaveRequests, subAssignments, type LeaveType } from "@/lib/db/schema";
 
 export async function createLeave(formData: FormData) {
   const teacherId = Number(formData.get("teacherId"));
@@ -20,13 +20,9 @@ export async function createLeave(formData: FormData) {
     redirect("/leaves/new?error=date");
   }
 
-  // ตรวจลาในช่วงเดียวกันซ้ำ (ทับซ้อน)
   const overlapping = await db.query.leaveRequests.findMany({
     where: (t, { eq, and, sql }) =>
-      and(
-        eq(t.teacherId, teacherId),
-        sql`${t.startDate} <= ${endDate} AND ${t.endDate} >= ${startDate}`
-      ),
+      and(eq(t.teacherId, teacherId), sql`${t.startDate} <= ${endDate} AND ${t.endDate} >= ${startDate}`),
   });
   if (overlapping.length > 0) {
     redirect("/leaves/new?error=overlap");
@@ -38,7 +34,7 @@ export async function createLeave(formData: FormData) {
     .returning({ id: leaveRequests.id });
 
   revalidatePath("/leaves");
-  revalidatePath("/");
+  revalidatePath("/stats");
   redirect(`/leaves/${row.id}`);
 }
 
@@ -47,15 +43,26 @@ export async function updateLeaveStatus(formData: FormData) {
   const status = String(formData.get("status"));
   if (!id || !["pending", "approved", "rejected"].includes(status)) return;
 
-  await db
-    .update(leaveRequests)
-    .set({ status: status as "pending" | "approved" | "rejected" })
-    .where(eq(leaveRequests.id, id));
+  await db.update(leaveRequests).set({ status: status as "pending" | "approved" | "rejected" }).where(eq(leaveRequests.id, id));
   revalidatePath("/leaves");
   revalidatePath(`/leaves/${id}`);
+  revalidatePath("/stats");
 }
 
-export async function deleteLeave(id: number) {
+export async function deleteLeave(data: FormData | number) {
+  const id = typeof data === "number" ? data : Number((data as FormData).get("id"));
+  if (!Number.isFinite(id) || id <= 0) {
+    if (typeof data !== "number") redirect("/leaves");
+    return;
+  }
+
+  // ลบงานจัดแทนที่ผูกกับใบลานี้ก่อน (กันกรณี cascade)
+  await db.delete(subAssignments).where(eq(subAssignments.leaveRequestId, id));
   await db.delete(leaveRequests).where(eq(leaveRequests.id, id));
+
   revalidatePath("/leaves");
+  revalidatePath("/stats");
+  revalidatePath("/assignments");
+  revalidatePath("/");
+  if (typeof data !== "number") redirect("/leaves");
 }
