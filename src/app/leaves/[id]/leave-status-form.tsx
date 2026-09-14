@@ -8,6 +8,7 @@ export function LeaveStatusForm({ leaveId, currentStatus }: { leaveId: number; c
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {pending && <div className="fixed top-0 left-0 right-0 z-[99] h-1 bg-blue-600 animate-pulse pointer-events-none" />}
       {currentStatus !== "approved" && (
         <button
           disabled={pending}

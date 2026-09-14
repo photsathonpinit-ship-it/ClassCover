@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { teachers } from "@/lib/db/schema";
 import { updateTeacher } from "../../actions";
+import { FormProgressBar, SubmitButton, TopFormProgressBar } from "@/components/form-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,8 @@ export default async function EditTeacherPage({ params, searchParams }: PageProp
       )}
 
       <form action={updateTeacher} className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
+        <TopFormProgressBar />
+        <FormProgressBar />
         <input type="hidden" name="id" value={teacher.id} />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
@@ -76,9 +79,7 @@ export default async function EditTeacherPage({ params, searchParams }: PageProp
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium">
-            บันทึก
-          </button>
+          <SubmitButton className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium">บันทึก</SubmitButton>
           <Link href="/teachers" className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 h-11 rounded-md text-sm font-medium inline-flex items-center justify-center">
             ยกเลิก
           </Link>

@@ -2,6 +2,7 @@ import { DAYS, type Day } from "@/lib/db/schema";
 import { DAY_LABELS } from "@/lib/dates";
 import Link from "next/link";
 import { saveTeacherSchedule } from "@/app/schedule/actions";
+import { FormProgressBar, SubmitButton, TopFormProgressBar } from "@/components/form-progress";
 
 const PERIODS = Array.from({ length: 8 }, (_, i) => i + 1);
 
@@ -16,6 +17,8 @@ export function ScheduleEditor({ teacherId, grid }: { teacherId: number; grid: R
 
   return (
     <form action={saveTeacherSchedule} className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+      <TopFormProgressBar />
+      <FormProgressBar />
       <input type="hidden" name="teacherId" value={teacherId} />
       <p className="text-sm text-slate-500 mb-4">
         กรอกวิชาที่สอนในแต่ละคาบ (ว่างไว้ถ้าไม่มีคาบ) ขนาดตารางใหญ่สามารถเลื่อนดูด้านข้างได้
@@ -75,12 +78,7 @@ export function ScheduleEditor({ teacherId, grid }: { teacherId: number; grid: R
       </div>
 
       <div className="mt-4 flex flex-col-reverse sm:flex-row gap-3">
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium"
-        >
-          บันทึกตารางสอน
-        </button>
+        <SubmitButton className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium">บันทึกตารางสอน</SubmitButton>
         <Link
           href="/teachers"
           className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 h-11 rounded-md text-sm font-medium inline-flex items-center justify-center"

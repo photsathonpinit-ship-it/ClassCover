@@ -57,6 +57,8 @@ export function AssignmentForm({
 
   return (
     <div>
+      {pending && <div className="fixed top-0 left-0 right-0 z-[99] h-1 bg-blue-600 animate-pulse pointer-events-none" />}
+      {pending && <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden mb-3"><div className="h-full w-full bg-blue-600 rounded-full animate-pulse" /></div>}
       {slots.length === 0 ? (
         <p className="text-sm text-slate-500 bg-slate-50 rounded-md p-4">
           ไม่พบคาบสอนที่ขาดในช่วงวันนี้ (ครูไม่ได้มีตารางสอนในช่วงนั้น)

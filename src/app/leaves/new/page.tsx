@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { teachers } from "@/lib/db/schema";
 import { LEAVE_TYPES } from "@/lib/db/schema";
 import { createLeave } from "../actions";
+import { FormProgressBar, SubmitButton, TopFormProgressBar } from "@/components/form-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,8 @@ export default async function NewLeavePage({ searchParams }: PageProps<"/leaves/
       {err === "missing" && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm mb-4">กรุณาเลือกครูและวันที่เริ่ม</div>}
 
       <form action={createLeave} className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
+        <TopFormProgressBar />
+        <FormProgressBar />
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">ครู</label>
           <select name="teacherId" required className="w-full border rounded-md px-3 h-11 text-sm bg-white">
@@ -66,9 +69,7 @@ export default async function NewLeavePage({ searchParams }: PageProps<"/leaves/
         </p>
 
         <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium">
-            บันทึกการลา
-          </button>
+          <SubmitButton className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium">บันทึกการลา</SubmitButton>
           <Link href="/leaves" className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 h-11 rounded-md text-sm font-medium inline-flex items-center justify-center">
             ยกเลิก
           </Link>

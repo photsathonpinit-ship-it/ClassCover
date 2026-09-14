@@ -3,6 +3,7 @@ import { getSchoolName } from "@/lib/school";
 import { updateLineSettings, updateSchoolName } from "./actions";
 import { db } from "@/lib/db";
 import { maskToken } from "@/lib/line";
+import { FormProgressBar, SubmitButton, TopFormProgressBar } from "@/components/form-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -31,13 +32,15 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
       {err && <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-[16px] text-sm mb-4">กรุณากรอกชื่อโรงเรียน</div>}
 
       <form action={updateSchoolName} className="bg-white border-[3px] border-white rounded-[24px] p-6 shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),0_10px_24px_rgba(0,0,0,0.07)] space-y-4">
+        <TopFormProgressBar />
+        <FormProgressBar />
         <div>
           <label className="block text-sm font-medium text-zinc-700 mb-1">ชื่อโรงเรียน</label>
           <input name="schoolName" defaultValue={current} placeholder="เช่น โรงเรียนบ้านหนองควาย" className="w-full bg-zinc-50 border-2 border-zinc-200 rounded-[12px] px-4 h-11 text-sm focus:outline-none focus:border-zinc-300" />
           <p className="text-xs text-zinc-500 mt-1">ตัวอย่าง: โรงเรียนบ้านหนองควาย, โรงเรียนวัดสระแก้ว</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
-          <button className="bg-zinc-900 hover:bg-zinc-800 text-white px-6 h-11 rounded-full text-sm font-medium">บันทึก</button>
+          <SubmitButton className="bg-zinc-900 hover:bg-zinc-800 text-white px-6 h-11 rounded-full text-sm font-medium">บันทึก</SubmitButton>
           <Link href="/" className="bg-white border-2 border-zinc-200 hover:bg-zinc-50 px-6 h-11 rounded-full text-sm inline-flex items-center justify-center">กลับแดชบอร์ด</Link>
         </div>
       </form>
@@ -64,6 +67,8 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
         </div>
 
         <form action={updateLineSettings} className="bg-white border border-zinc-200 rounded-[16px] p-6 space-y-4 shadow-sm">
+          <TopFormProgressBar />
+          <FormProgressBar />
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1">Channel Access Token (LINE Messaging API)</label>
             <input name="lineChannelToken" defaultValue={dbToken ?? ""} placeholder="วาง Channel access token (ยาว ๆ ขึ้นต้นด้วย ....)" className="w-full bg-zinc-50 border-2 border-zinc-200 rounded-[12px] px-4 h-11 text-sm focus:outline-none focus:border-zinc-300" autoComplete="off" />
@@ -75,7 +80,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
             <p className="text-xs text-zinc-500 mt-1">ต้องเชิญบอท (Official Account) เข้าไลน์กลุ่มก่อน แล้วดู Group ID จาก Webhook หรือเรียก <code className="bg-zinc-100 px-1 rounded">GET https://api.line.me/v2/bot/groups/...</code> หรือดู log หลังเชิญ</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 h-11 rounded-full text-sm font-medium">บันทึกการตั้งค่า LINE</button>
+            <SubmitButton pendingText="กำลังบันทึก..." className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 h-11 rounded-full text-sm font-medium">บันทึกการตั้งค่า LINE</SubmitButton>
             <button type="reset" className="bg-white border-2 border-zinc-200 hover:bg-zinc-50 px-6 h-11 rounded-full text-sm text-zinc-700">ล้าง</button>
           </div>
           <p className="text-xs text-zinc-500">ปล่อยว่างแล้วบันทึก = ปิดการแจ้งเตือน (หรือลบ ENV ออก)</p>

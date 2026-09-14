@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createTeacher } from "../actions";
+import { FormProgressBar, SubmitButton, TopFormProgressBar } from "@/components/form-progress";
 
 export default async function NewTeacherPage({ searchParams }: PageProps<"/teachers/new">) {
   const sp = await searchParams;
@@ -20,6 +21,8 @@ export default async function NewTeacherPage({ searchParams }: PageProps<"/teach
       )}
 
       <form action={createTeacher} className="bg-white rounded-lg shadow-sm p-4 sm:p-6 space-y-4">
+        <TopFormProgressBar />
+        <FormProgressBar />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">ตำแหน่ง</label>
@@ -84,12 +87,9 @@ export default async function NewTeacherPage({ searchParams }: PageProps<"/teach
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium"
-          >
+          <SubmitButton className="bg-blue-600 hover:bg-blue-700 text-white px-5 h-11 rounded-md text-sm font-medium">
             บันทึกและตั้งตารางสอน
-          </button>
+          </SubmitButton>
           <Link
             href="/teachers"
             className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 h-11 rounded-md text-sm font-medium inline-flex items-center justify-center"
