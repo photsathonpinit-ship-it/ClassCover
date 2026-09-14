@@ -273,3 +273,113 @@ export function AssignmentsImageButton(props: {
     </>
   );
 }
+
+export function StatsImageButton(props: {
+  schoolName: string;
+  periodLabel: string;
+  totalTimes: number;
+  totalDays: number;
+  byType: { type: string; count: number; days: number }[];
+  perTeacher: { name: string; count: number; days: number }[];
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [saving, setSaving] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const handle = async () => {
+    if (!ref.current) return;
+    setSaving(true);
+    try {
+      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 2, backgroundColor: "#ffffff" });
+      const filename = `สถิติการลา_${props.periodLabel.replaceAll("/", "-").replaceAll(" ", "")}.png`;
+      const result = await shareOrDownload(dataUrl, filename);
+      if (result !== "shared") setPreview(result);
+    } catch (e) {
+      console.error(e);
+      alert("บันทึกภาพไม่สำเร็จ กรุณาลองใหม่");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={handle}
+        disabled={saving}
+        className="inline-flex items-center gap-2 bg-zinc-900 hover:bg-black disabled:opacity-60 text-white px-4 h-9 rounded-full text-sm font-medium"
+      >
+        {saving ? "กำลังสร้างภาพ..." : "📷 บันทึกเป็นรูปภาพ"}
+      </button>
+      <PreviewModal dataUrl={preview} onClose={() => setPreview(null)} />
+      <div style={{ position: "fixed", left: -10000, top: 0, pointerEvents: "none" }} aria-hidden>
+        <div ref={ref} style={{ width: 1080, background: "#ffffff", color: "#0f172a", fontFamily: "Arial, Noto Sans Thai, system-ui, sans-serif", padding: 40, lineHeight: 1.6 }}>
+          <div style={{ border: "3px solid #0f172a", borderRadius: 20, overflow: "hidden" }}>
+            <div style={{ background: "#0f172a", color: "#ffffff", padding: "28px 36px" }}>
+              <div style={{ fontSize: 13, letterSpacing: 2.4, opacity: 0.85, fontWeight: 700 }}>ACADEMIC AFFAIRS · ANUBANNONGKHWAI SCHOOL</div>
+              <div style={{ fontSize: 38, fontWeight: 800, letterSpacing: -1, marginTop: 8, lineHeight: 1.1 }}>{props.schoolName}</div>
+              <div style={{ fontSize: 24, fontWeight: 800, marginTop: 10, color: "#93c5fd" }}>สรุปสถิติการลา</div>
+              <div style={{ fontSize: 15, marginTop: 6, color: "#cbd5e1" }}>{props.periodLabel} · รวม {props.totalTimes} ครั้ง · {props.totalDays} วัน</div>
+            </div>
+            <div style={{ padding: "28px 36px 32px", background: "#ffffff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <div style={{ fontSize: 16, fontWeight: 800, background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 999, padding: "8px 16px" }}>
+                  ทั้งหมด {props.totalTimes} ครั้ง · {props.totalDays} วัน
+                </div>
+                <div style={{ fontSize: 13, color: "#64748b", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 999, padding: "6px 14px" }}>{thaiDateNow()}</div>
+              </div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, marginBottom: 20 }}>
+                <thead>
+                  <tr>
+                    {["ประเภท", "ครั้ง", "วัน"].map((h) => (
+                      <th key={h} style={{ textAlign: h === "ประเภท" ? "left" : "center", background: "#f1f5f9", border: "1px solid #e2e8f0", padding: "10px 12px", fontSize: 12, letterSpacing: 0.6, fontWeight: 800, color: "#334155" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.byType.map((r, i) => (
+                    <tr key={r.type} style={{ background: i % 2 === 0 ? "#ffffff" : "#f8fafc" }}>
+                      <td style={{ border: "1px solid #e2e8f0", padding: "10px 14px", fontWeight: 700 }}>{r.type}</td>
+                      <td style={{ border: "1px solid #e2e8f0", padding: "10px 14px", textAlign: "center", fontWeight: 800 }}>{r.count}</td>
+                      <td style={{ border: "1px solid #e2e8f0", padding: "10px 14px", textAlign: "center", fontWeight: 800 }}>{r.days}</td>
+                    </tr>
+                  ))}
+                  <tr style={{ background: "#0f172a", color: "#fff" }}>
+                    <td style={{ border: "1px solid #0f172a", padding: "10px 14px", fontWeight: 800 }}>รวม</td>
+                    <td style={{ border: "1px solid #0f172a", padding: "10px 14px", textAlign: "center", fontWeight: 800 }}>{props.totalTimes}</td>
+                    <td style={{ border: "1px solid #0f172a", padding: "10px 14px", textAlign: "center", fontWeight: 800 }}>{props.totalDays}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style={{ fontSize: 15, fontWeight: 800, marginBottom: 10 }}>รายบุคคล (เรียงตามวันมากไปน้อย)</div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead>
+                  <tr>
+                    {["ครู", "ครั้ง", "วัน"].map((h) => (
+                      <th key={h} style={{ textAlign: h === "ครู" ? "left" : "center", background: "#f1f5f9", border: "1px solid #e2e8f0", padding: "10px 12px", fontSize: 12, letterSpacing: 0.6, fontWeight: 800, color: "#334155" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.perTeacher.slice(0, 20).map((r, i) => (
+                    <tr key={r.name} style={{ background: i % 2 === 0 ? "#ffffff" : "#f8fafc" }}>
+                      <td style={{ border: "1px solid #e2e8f0", padding: "10px 12px", fontWeight: 700 }}>{r.name}</td>
+                      <td style={{ border: "1px solid #e2e8f0", padding: "10px 12px", textAlign: "center", fontWeight: 700 }}>{r.count}</td>
+                      <td style={{ border: "1px solid #e2e8f0", padding: "10px 12px", textAlign: "center", fontWeight: 800 }}>{r.days}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #e2e8f0", paddingTop: 14, fontSize: 13, color: "#64748b" }}>
+                <span>by <span style={{ color: "#0f172a", fontWeight: 700 }}>Photsathon Pinit</span> · Anubannongkhwai School</span>
+                <span>ฝ่ายวิชาการ</span>
+              </div>
+            </div>
+          </div>
+          <div style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "#94a3b8" }}>ระบบจัดสอนแทนอัตโนมัติ · https://class-cover-ten.vercel.app</div>
+        </div>
+      </div>
+    </>
+  );
+}

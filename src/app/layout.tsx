@@ -28,6 +28,7 @@ const navItems = [
   { href: "/schedule", label: "ตารางสอน" },
   { href: "/leaves", label: "การลา/ราชการ" },
   { href: "/assignments", label: "รายการจัดแทน" },
+  { href: "/stats", label: "สถิติการลา" },
 ];
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

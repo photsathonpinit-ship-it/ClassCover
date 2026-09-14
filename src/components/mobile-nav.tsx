@@ -10,6 +10,7 @@ const navItems = [
   { href: "/schedule", label: "ตารางสอน" },
   { href: "/leaves", label: "การลา/ราชการ" },
   { href: "/assignments", label: "รายการจัดแทน" },
+  { href: "/stats", label: "สถิติการลา" },
 ];
 
 export function MobileNav({ schoolName }: { schoolName: string }) {
