@@ -83,7 +83,7 @@ export default async function Home() {
           <p className="text-base text-zinc-600 leading-relaxed max-w-[65ch] mt-3">ภาพรวมประจำวันสำหรับฝ่ายวิชาการ — การลาที่ต้องจัด ภาระสัปดาห์นี้ และรายการล่าสุด</p>
         </div>
         <div className="text-xs font-mono text-zinc-500 border border-zinc-200 rounded-full px-4 py-2 bg-white">
-          {monStr} → {friStr} · 27 ครู
+          {monStr} → {friStr}
         </div>
       </div>
 
