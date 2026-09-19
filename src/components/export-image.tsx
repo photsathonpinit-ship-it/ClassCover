@@ -285,16 +285,25 @@ export function LeaveLineShareButton(props: {
   const ref = useRef<HTMLDivElement>(null);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
   const handle = async () => {
     if (!ref.current) return;
     setSaving(true);
+    setMsg(null);
     try {
       const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 1.8, backgroundColor: "#ffffff" });
-      const filename = `จัดสอนแทน_${props.absentName}_${props.dateRange.replaceAll("/", "-").replaceAll(" ", "")}.png`;
       setPreview(dataUrl);
-      const result = await shareOrDownload(dataUrl, filename);
-      if (result === "shared") {
-        // แชร์สำเร็จแล้ว ยังคงโชว์พรีวิวไว้ให้กดค้างบันทึกได้ถ้าต้องการ
+      const res = await fetch("/api/line/push-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl }),
+      });
+      const j = await res.json().catch(() => ({ ok: false, error: "unknown" }));
+      if (j.ok) {
+        setMsg("ส่งรูปภาพไปไลน์กลุ่ม จัดสอนแทนอนุบาลหนองควาย แล้ว ✓");
+      } else {
+        setMsg(j.error || "ส่งไม่สำเร็จ");
+        if (j.error) alert(j.error);
       }
     } catch (e) {
       console.error(e);
@@ -308,8 +317,9 @@ export function LeaveLineShareButton(props: {
   return (
     <>
       <button type="button" onClick={handle} disabled={saving} className="inline-flex items-center gap-2 bg-[#06C755] hover:bg-[#05b64c] disabled:opacity-60 text-white px-4 h-9 rounded-full text-sm font-medium">
-        {saving ? "กำลังสร้างภาพ..." : "ส่งรูปภาพไปไลน์"}
+        {saving ? "กำลังส่ง..." : "ส่งรูปภาพไปไลน์"}
       </button>
+      {msg && <span className={`text-xs ${msg.includes("แล้ว") ? "text-emerald-700" : "text-red-600"}`}>{msg}</span>}
       <PreviewModal dataUrl={preview} onClose={() => setPreview(null)} />
       <div style={{ position: "fixed", left: -10000, top: 0, pointerEvents: "none" }} aria-hidden>
         <div ref={ref} style={{ width: 1080, background: "#ffffff", color: "#0f172a", fontFamily: "Arial, Noto Sans Thai, system-ui, sans-serif", padding: 40, lineHeight: 1.6 }}>
@@ -349,17 +359,24 @@ export function AssignmentsLineShareButton(props: {
   const ref = useRef<HTMLDivElement>(null);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
   const handle = async () => {
     if (!ref.current) return;
     setSaving(true);
+    setMsg(null);
     try {
       const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 1.8, backgroundColor: "#ffffff" });
-      const safeTitle = props.title.replaceAll("/", "-").replaceAll(" ", "_");
-      const filename = `${safeTitle}.png`;
       setPreview(dataUrl);
-      const result = await shareOrDownload(dataUrl, filename);
-      if (result === "shared") {
-        // แชร์สำเร็จแล้ว ยังโชว์พรีวิวไว้
+      const res = await fetch("/api/line/push-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl }),
+      });
+      const j = await res.json().catch(() => ({ ok: false, error: "unknown" }));
+      if (j.ok) setMsg("ส่งรูปภาพไปไลน์กลุ่ม จัดสอนแทนอนุบาลหนองควาย แล้ว ✓");
+      else {
+        setMsg(j.error || "ส่งไม่สำเร็จ");
+        if (j.error) alert(j.error);
       }
     } catch (e) {
       console.error(e);
@@ -378,8 +395,9 @@ export function AssignmentsLineShareButton(props: {
   return (
     <>
       <button type="button" onClick={handle} disabled={saving || props.assignments.length === 0} className="inline-flex items-center gap-2 bg-[#06C755] hover:bg-[#05b64c] disabled:opacity-40 text-white px-4 h-9 rounded-full text-sm font-medium">
-        {saving ? "กำลังสร้างภาพ..." : "ส่งรูปภาพไปไลน์"}
+        {saving ? "กำลังส่ง..." : "ส่งรูปภาพไปไลน์"}
       </button>
+      {msg && <span className={`text-xs ${msg.includes("แล้ว") ? "text-emerald-700" : "text-red-600"}`}>{msg}</span>}
       <PreviewModal dataUrl={preview} onClose={() => setPreview(null)} />
       <div style={{ position: "fixed", left: -10000, top: 0, pointerEvents: "none" }} aria-hidden>
         <div ref={ref} style={{ width: 1080, background: "#ffffff", color: "#0f172a", fontFamily: "Arial, Noto Sans Thai, system-ui, sans-serif", padding: 40, lineHeight: 1.6 }}>

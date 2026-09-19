@@ -17,6 +17,7 @@ export const schedules = (isPg ? pg.schedules : sqlite.schedules) as typeof sqli
 export const leaveRequests = (isPg ? pg.leaveRequests : sqlite.leaveRequests) as typeof sqlite.leaveRequests;
 export const subAssignments = (isPg ? pg.subAssignments : sqlite.subAssignments) as typeof sqlite.subAssignments;
 export const schoolSettings = (isPg ? pg.schoolSettings : sqlite.schoolSettings) as typeof sqlite.schoolSettings;
+export const lineImages = (isPg ? pg.lineImages : sqlite.lineImages) as typeof sqlite.lineImages;
 
 export type Teacher = typeof teachers.$inferSelect;
 export type Schedule = typeof schedules.$inferSelect;

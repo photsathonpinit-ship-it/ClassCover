@@ -78,3 +78,9 @@ export const schoolSettings = pgTable("school_settings", {
   lineGroupId: text("line_group_id"),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });
+
+export const lineImages = pgTable("line_images", {
+  id: text("id").primaryKey(),
+  data: text("data").notNull(),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+});
