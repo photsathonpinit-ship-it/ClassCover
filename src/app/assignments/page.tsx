@@ -7,7 +7,7 @@ import { DAY_LABELS } from "@/lib/dates";
 import { deleteAssignment, updateAssignmentStatus } from "./actions";
 import { ExportCsvButton, PrintButton } from "./assignment-row-actions";
 import { CopyAssignmentsButton } from "@/components/copy-line-summary";
-import { AssignmentsImageButton } from "@/components/export-image";
+import { AssignmentsImageButton, AssignmentsLineShareButton } from "@/components/export-image";
 import { getSchoolName } from "@/lib/school";
 import { getTeacherName } from "@/lib/teacher-name";
 
@@ -145,6 +145,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/assi
         <div className="sm:ml-auto flex flex-wrap items-center gap-2">
           <CopyAssignmentsButton schoolName={schoolName} title={copyTitle} assignments={copyAssignments} />
           <AssignmentsImageButton schoolName={schoolName} title={copyTitle} assignments={copyAssignments} />
+          <AssignmentsLineShareButton schoolName={schoolName} title={copyTitle} assignments={copyAssignments} />
           <ExportCsvButton rows={csvRows} />
         </div>
       </div>
