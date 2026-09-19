@@ -76,7 +76,7 @@ export function LeaveImageButton(props: {
     if (!ref.current) return;
     setSaving(true);
     try {
-      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 2, backgroundColor: "#ffffff" });
+      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 1.8, backgroundColor: "#ffffff" });
       const filename = `จัดสอนแทน_${props.absentName}_${props.dateRange.replaceAll("/", "-").replaceAll(" ", "")}.png`;
       const result = await shareOrDownload(dataUrl, filename);
       if (result !== "shared") setPreview(result);
@@ -184,7 +184,7 @@ export function AssignmentsImageButton(props: {
     if (!ref.current) return;
     setSaving(true);
     try {
-      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 2, backgroundColor: "#ffffff" });
+      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 1.8, backgroundColor: "#ffffff" });
       const safeTitle = props.title.replaceAll("/", "-").replaceAll(" ", "_");
       const filename = `${safeTitle}.png`;
       const result = await shareOrDownload(dataUrl, filename);
@@ -289,13 +289,16 @@ export function LeaveLineShareButton(props: {
     if (!ref.current) return;
     setSaving(true);
     try {
-      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 2, backgroundColor: "#ffffff" });
+      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 1.8, backgroundColor: "#ffffff" });
       const filename = `จัดสอนแทน_${props.absentName}_${props.dateRange.replaceAll("/", "-").replaceAll(" ", "")}.png`;
+      setPreview(dataUrl);
       const result = await shareOrDownload(dataUrl, filename);
-      if (result !== "shared") setPreview(result);
+      if (result === "shared") {
+        // แชร์สำเร็จแล้ว ยังคงโชว์พรีวิวไว้ให้กดค้างบันทึกได้ถ้าต้องการ
+      }
     } catch (e) {
       console.error(e);
-      alert("ส่งไม่สำเร็จ กรุณาลองใหม่");
+      alert("สร้างภาพไม่สำเร็จ กรุณาลองใหม่หรือลองบน Chrome/Safari");
     } finally {
       setSaving(false);
     }
@@ -350,14 +353,17 @@ export function AssignmentsLineShareButton(props: {
     if (!ref.current) return;
     setSaving(true);
     try {
-      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 2, backgroundColor: "#ffffff" });
+      const dataUrl = await toPng(ref.current, { cacheBust: true, pixelRatio: 1.8, backgroundColor: "#ffffff" });
       const safeTitle = props.title.replaceAll("/", "-").replaceAll(" ", "_");
       const filename = `${safeTitle}.png`;
+      setPreview(dataUrl);
       const result = await shareOrDownload(dataUrl, filename);
-      if (result !== "shared") setPreview(result);
+      if (result === "shared") {
+        // แชร์สำเร็จแล้ว ยังโชว์พรีวิวไว้
+      }
     } catch (e) {
       console.error(e);
-      alert("ส่งไม่สำเร็จ กรุณาลองใหม่");
+      alert("สร้างภาพไม่สำเร็จ กรุณาลองใหม่หรือลองบน Chrome/Safari");
     } finally {
       setSaving(false);
     }
